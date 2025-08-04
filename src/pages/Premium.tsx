@@ -1,22 +1,26 @@
 import { useState } from 'react';
-import { IoStar, IoCheckmarkCircle, IoDiamond, IoRocket } from 'react-icons/io5';
-import { FaCrown } from 'react-icons/fa';
-import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { IoStar, IoCheckmarkCircle, IoDiamond, IoRocket, IoArrowBack, IoPlayCircle, IoHeart, IoDownload, IoEye, IoShieldCheckmark, IoPerson, IoChatbubbles, IoVideocam, IoLocation } from 'react-icons/io5';
+import { FaCrown, FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { MdSportsSoccer, MdMovie, MdLiveTv, MdVerified, MdFavorite } from 'react-icons/md';
 
-const Premium = () => {
+const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
+  const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState('monthly');
 
   const plans = [
     {
       id: 'basic',
       name: 'Basic',
-      price: selectedPlan === 'monthly' ? 9.99 : 99.99,
+      price: selectedPlan === 'monthly' ? 4.99 : 49.99,
       period: selectedPlan === 'monthly' ? 'month' : 'year',
       features: [
-        'Unlimited browsing',
-        'Basic messaging',
-        'Standard support',
-        'Ad-free experience'
+        'Unlimited movie streaming',
+        'HD quality content',
+        'Ad-free experience',
+        'Basic dating features',
+        'Standard messaging',
+        'Download 5 movies/month'
       ],
       popular: false,
       icon: <IoStar size={24} color="#6b7280" />
@@ -24,14 +28,17 @@ const Premium = () => {
     {
       id: 'premium',
       name: 'Premium',
-      price: selectedPlan === 'monthly' ? 19.99 : 199.99,
+      price: selectedPlan === 'monthly' ? 9.99 : 99.99,
       period: selectedPlan === 'monthly' ? 'month' : 'year',
       features: [
         'Everything in Basic',
+        '4K Ultra HD streaming',
+        'Live sports coverage',
+        'Unlimited downloads',
+        'Advanced dating features',
         'Priority messaging',
-        'Advanced filters',
-        'Verified badges',
-        'Premium support',
+        'Verified badge',
+        'Multiple devices (4)',
         'Exclusive content'
       ],
       popular: true,
@@ -40,18 +47,44 @@ const Premium = () => {
     {
       id: 'vip',
       name: 'VIP',
-      price: selectedPlan === 'monthly' ? 49.99 : 499.99,
+      price: selectedPlan === 'monthly' ? 19.99 : 199.99,
       period: selectedPlan === 'monthly' ? 'month' : 'year',
       features: [
         'Everything in Premium',
-        'VIP status',
-        'Personal concierge',
-        'Exclusive events',
-        'Priority booking',
-        'Custom features'
+        'VIP early access',
+        'Exclusive movie premieres',
+        'Personalized recommendations',
+        'Unlimited devices',
+        'Premium sports packages',
+        'VIP dating features',
+        'Concierge support',
+        'Priority customer support'
       ],
       popular: false,
       icon: <FaCrown size={24} color="#8b5cf6" />
+    }
+  ];
+
+  const appFeatures = [
+    {
+      icon: <MdMovie size={32} color="#3b82f6" />,
+      title: 'Entertainment',
+      description: 'Unlimited movies, TV shows, live sports, and exclusive content'
+    },
+    {
+      icon: <MdFavorite size={32} color="#ec4899" />,
+      title: 'Dating & Social',
+      description: 'Advanced matching, unlimited messaging, and social networking features'
+    },
+    {
+      icon: <IoVideocam size={32} color="#10b981" />,
+      title: 'Live Content',
+      description: 'Live streaming, video calls, and real-time entertainment'
+    },
+    {
+      icon: <IoLocation size={32} color="#f59e0b" />,
+      title: 'Location Services',
+      description: 'Find nearby people, events, and entertainment venues'
     }
   ];
 
@@ -67,8 +100,31 @@ const Premium = () => {
       {/* Header */}
       <div style={{
         textAlign: 'center',
-        marginBottom: '32px'
+        marginBottom: '32px',
+        position: 'relative'
       }}>
+        {/* Back Arrow */}
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            background: 'rgba(255, 255, 255, 0.2)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10,
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <IoArrowBack size={20} color="white" />
+        </button>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -94,8 +150,64 @@ const Premium = () => {
           marginLeft: 'auto',
           marginRight: 'auto'
         }}>
-          Unlock exclusive features and take your experience to the next level
+          Unlock unlimited entertainment, dating features, and social networking capabilities
         </p>
+      </div>
+
+      {/* App Features */}
+      <div style={{
+        background: 'white',
+        borderRadius: '20px',
+        padding: '32px',
+        marginBottom: '24px',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
+      }}>
+        <h2 style={{
+          fontSize: '24px',
+          fontWeight: '700',
+          color: '#1a1a1a',
+          textAlign: 'center',
+          marginBottom: '32px'
+        }}>
+          Premium App Features
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '24px'
+        }}>
+          {appFeatures.map((feature, index) => (
+            <div key={index} style={{ textAlign: 'center' }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px'
+              }}>
+                {feature.icon}
+              </div>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: '600',
+                color: '#1a1a1a',
+                marginBottom: '8px'
+              }}>
+                {feature.title}
+              </h3>
+              <p style={{
+                fontSize: '14px',
+                color: '#6b7280',
+                lineHeight: '1.5'
+              }}>
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Billing Toggle */}
@@ -272,7 +384,7 @@ const Premium = () => {
         ))}
       </div>
 
-      {/* Features Comparison */}
+      {/* What You'll Get */}
       <div style={{
         background: 'white',
         borderRadius: '20px',
@@ -289,7 +401,7 @@ const Premium = () => {
           textAlign: 'center',
           marginBottom: '32px'
         }}>
-          Why Choose Premium?
+          What You'll Get
         </h2>
         
         <div style={{
@@ -308,7 +420,7 @@ const Premium = () => {
               justifyContent: 'center',
               margin: '0 auto 16px'
             }}>
-              <FaRegHeart size={24} color="white" />
+              <IoPlayCircle size={24} color="white" />
             </div>
             <h3 style={{
               fontSize: '18px',
@@ -316,14 +428,44 @@ const Premium = () => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              Priority Access
+              Unlimited Entertainment
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               lineHeight: '1.5'
             }}>
-              Get first access to new features and exclusive content
+              Watch unlimited movies, TV shows, and live sports without restrictions
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <MdFavorite size={24} color="white" />
+            </div>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#1a1a1a',
+              marginBottom: '8px'
+            }}>
+              Advanced Dating
+            </h3>
+            <p style={{
+              fontSize: '14px',
+              color: '#6b7280',
+              lineHeight: '1.5'
+            }}>
+              Enhanced matching, unlimited messaging, and premium dating features
             </p>
           </div>
 
@@ -338,7 +480,7 @@ const Premium = () => {
               justifyContent: 'center',
               margin: '0 auto 16px'
             }}>
-              <FaRegBookmark size={24} color="white" />
+              <IoDownload size={24} color="white" />
             </div>
             <h3 style={{
               fontSize: '18px',
@@ -346,44 +488,14 @@ const Premium = () => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              Advanced Features
+              Offline Access
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               lineHeight: '1.5'
             }}>
-              Unlock powerful tools and customization options
-            </p>
-          </div>
-
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px'
-            }}>
-              <IoRocket size={24} color="white" />
-            </div>
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: '600',
-              color: '#1a1a1a',
-              marginBottom: '8px'
-            }}>
-              Premium Support
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#6b7280',
-              lineHeight: '1.5'
-            }}>
-              Get priority customer support and faster response times
+              Download content to watch offline and access premium features anywhere
             </p>
           </div>
         </div>
@@ -447,14 +559,14 @@ const Premium = () => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              What payment methods do you accept?
+              What dating features are included in Premium?
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               margin: 0
             }}>
-              We accept all major credit cards, PayPal, and Apple Pay. All payments are processed securely.
+              Premium includes unlimited messaging, advanced matching algorithms, verified badges, priority support, and exclusive dating features.
             </p>
           </div>
 

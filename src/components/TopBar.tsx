@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { IoSearchOutline, IoHeartOutline, IoChatbubbleEllipsesOutline, IoMenuOutline } from 'react-icons/io5';
+import { IoSearchOutline, IoHeartOutline, IoChatbubbleEllipsesOutline, IoPersonOutline } from 'react-icons/io5';
 import type { User } from '../types';
 
 interface TopBarProps {
@@ -47,17 +47,19 @@ const TopBar = ({ user, setUser, onMenuClick }: TopBarProps) => {
         <button
           onClick={onMenuClick}
           style={{
-            background: 'none',
+            background: 'rgba(0, 0, 0, 0.1)',
             border: 'none',
             cursor: 'pointer',
             padding: '8px',
-            borderRadius: '8px',
+            borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            width: '40px',
+            height: '40px'
           }}
         >
-          <IoMenuOutline size={24} color="#262626" />
+          <IoPersonOutline size={24} color="#262626" />
         </button>
       </div>
 

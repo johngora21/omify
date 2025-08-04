@@ -1,396 +1,394 @@
 import { useState } from 'react';
-import { IoBriefcaseOutline, IoCheckmarkCircle, IoStar, IoLocationOutline, IoPersonOutline, IoShieldCheckmark, IoRocket } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import { IoArrowBack, IoStar, IoPeople, IoTrendingUp, IoWallet, IoAnalytics, IoStorefront, IoRestaurant, IoCar, IoHome, IoHeart, IoBook, IoSchool, IoBriefcase, IoFitness, IoCut, IoCarSport, IoMedical, IoShirt, IoConstruct, IoAdd, IoImage, IoPricetag, IoLocation, IoPlay } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
 
-const Professional = () => {
+const Professional = ({ onMenuClick }: { onMenuClick?: () => void }) => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
 
-  const categories = [
+  const professionalCategories = [
     {
-      id: 'massage',
-      name: 'Massage Services',
-      icon: '💆‍♀️',
-      description: 'Swedish, Deep Tissue, Hot Stone, Nuru Massage',
-      requirements: ['Valid ID', 'Background Check', 'Professional Photos']
+      id: 'influencer',
+      title: 'Social Media Influencer',
+      icon: <IoPeople size={32} />,
+      description: 'Monetize your social media presence and influence',
+      examples: ['Content creation', 'Brand partnerships', 'Sponsored posts']
     },
     {
-      id: 'escort',
-      name: 'Escort Services',
-      icon: '👠',
-      description: 'Companionship, Intimate Services, Travel Companion',
-      requirements: ['Valid ID', 'Background Check', 'Professional Photos', 'Age Verification']
+      id: 'celebrity',
+      title: 'Celebrity & Public Figure',
+      icon: <MdVerified size={32} />,
+      description: 'Leverage your fame and public recognition',
+      examples: ['Endorsements', 'Appearances', 'Exclusive content']
     },
     {
-      id: 'dancer',
-      name: 'Dance & Entertainment',
-      icon: '💃',
-      description: 'Stripper, Pole Dance, Private Shows',
-      requirements: ['Valid ID', 'Background Check', 'Professional Photos']
+      id: 'content-creator',
+      title: 'Content Creator',
+      icon: <IoImage size={32} />,
+      description: 'Create engaging content and build your audience',
+      examples: ['Videos', 'Photos', 'Blogs', 'Live streams']
+    },
+    {
+      id: 'podcaster',
+      title: 'Podcaster',
+      icon: <IoPlay size={32} />,
+      description: 'Monetize your podcast and audio content',
+      examples: ['Podcast episodes', 'Interviews', 'Exclusive audio']
+    },
+    {
+      id: 'streamer',
+      title: 'Live Streamer',
+      icon: <IoPlay size={32} />,
+      description: 'Build your audience through live streaming',
+      examples: ['Gaming streams', 'Live events', 'Interactive content']
+    },
+    {
+      id: 'blogger',
+      title: 'Blogger & Writer',
+      icon: <IoBook size={32} />,
+      description: 'Share your expertise through written content',
+      examples: ['Blog posts', 'Articles', 'E-books', 'Newsletters']
     },
     {
       id: 'photographer',
-      name: 'Photography',
-      icon: '📸',
-      description: 'Professional Photography, Boudoir Shoots',
-      requirements: ['Valid ID', 'Portfolio Review', 'Professional Photos']
+      title: 'Photographer & Videographer',
+      icon: <IoImage size={32} />,
+      description: 'Showcase your visual content and skills',
+      examples: ['Photo shoots', 'Video content', 'Visual storytelling']
+    },
+    {
+      id: 'model',
+      title: 'Model & Fashion',
+      icon: <IoShirt size={32} />,
+      description: 'Monetize your modeling and fashion content',
+      examples: ['Fashion shoots', 'Style content', 'Brand collaborations']
+    },
+    {
+      id: 'musician',
+      title: 'Musician & Artist',
+      icon: <IoPlay size={32} />,
+      description: 'Share your music and artistic talents',
+      examples: ['Music releases', 'Performances', 'Exclusive content']
+    },
+    {
+      id: 'comedian',
+      title: 'Comedian & Entertainer',
+      icon: <IoPeople size={32} />,
+      description: 'Entertain and engage your audience',
+      examples: ['Comedy content', 'Performances', 'Entertainment']
+    },
+    {
+      id: 'fitness-influencer',
+      title: 'Fitness Influencer',
+      icon: <IoFitness size={32} />,
+      description: 'Inspire and motivate through fitness content',
+      examples: ['Workout videos', 'Fitness tips', 'Wellness content']
+    },
+    {
+      id: 'business-expert',
+      title: 'Business Expert',
+      icon: <IoBriefcase size={32} />,
+      description: 'Share your business knowledge and insights',
+      examples: ['Business advice', 'Consulting', 'Educational content']
     }
   ];
 
-  const benefits = [
-    {
-      title: 'Earn More Money',
-      description: 'Set your own rates and earn significantly more than regular jobs',
-      icon: <IoStar size={24} color="#f59e0b" />
-    },
-    {
-      title: 'Flexible Schedule',
-      description: 'Work when you want, where you want, on your own terms',
-      icon: <IoBriefcaseOutline size={24} color="#3b82f6" />
-    },
-    {
-      title: 'Verified Badge',
-      description: 'Get a verified badge to build trust with clients',
-      icon: <MdVerified size={24} color="#10b981" />
-    },
-    {
-      title: 'Priority Support',
-      description: 'Get dedicated support for professional providers',
-      icon: <IoShieldCheckmark size={24} color="#8b5cf6" />
-    }
-  ];
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+  };
 
-  const handleUpgrade = () => {
-    // In a real app, this would handle the upgrade process
-    console.log('Upgrading to professional account...');
-    alert('Professional upgrade request submitted! We will review your application within 24-48 hours.');
+  const handleJoinAsCreator = () => {
+    if (selectedCategory) {
+      navigate(`/join-creator/${selectedCategory}`);
+    }
   };
 
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '20px',
-      paddingBottom: '100px',
-      maxWidth: '100vw',
-      overflowX: 'hidden'
+      background: 'white',
+      paddingBottom: '80px'
     }}>
       {/* Header */}
       <div style={{
-        textAlign: 'center',
-        marginBottom: '32px'
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '20px 16px',
+        position: 'relative'
+      }}>
+        {/* Back Arrow */}
+        <button
+          onClick={() => onMenuClick ? onMenuClick() : navigate(-1)}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '16px',
+            transform: 'translateY(-50%)',
+            background: 'rgba(255, 255, 255, 0.2)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10
+          }}
+        >
+          <IoArrowBack size={20} color="white" />
+        </button>
+        
+        {/* Title */}
+        <div style={{
+          textAlign: 'center',
+          color: 'white'
+        }}>
+          <h1 style={{
+            fontSize: '24px',
+            fontWeight: '700',
+            margin: '0 0 8px 0'
+          }}>
+            Professional Creator
+          </h1>
+          <p style={{
+            fontSize: '16px',
+            margin: 0,
+            opacity: 0.9
+          }}>
+            Monetize your influence and get paid for bringing traffic
+          </p>
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div style={{
+        padding: '20px 16px',
+        background: 'white'
       }}>
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '12px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '16px',
+          marginBottom: '24px'
+        }}>
+          <div style={{
+            textAlign: 'center',
+            padding: '16px',
+            background: '#f8f9fa',
+            borderRadius: '12px'
+          }}>
+            <IoPeople size={24} color="#3b82f6" style={{ marginBottom: '8px' }} />
+            <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a1a1a' }}>10K+</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>Active Creators</div>
+          </div>
+          <div style={{
+            textAlign: 'center',
+            padding: '16px',
+            background: '#f8f9fa',
+            borderRadius: '12px'
+          }}>
+            <IoWallet size={24} color="#10b981" style={{ marginBottom: '8px' }} />
+            <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a1a1a' }}>$2M+</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>Paid to Creators</div>
+          </div>
+          <div style={{
+            textAlign: 'center',
+            padding: '16px',
+            background: '#f8f9fa',
+            borderRadius: '12px'
+          }}>
+            <IoTrendingUp size={24} color="#f59e0b" style={{ marginBottom: '8px' }} />
+            <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a1a1a' }}>500K+</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>Traffic Generated</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Benefits Section */}
+      <div style={{
+        padding: '0 16px 24px 16px',
+        background: 'white'
+      }}>
+        <h2 style={{
+          fontSize: '20px',
+          fontWeight: '600',
+          color: '#1a1a1a',
           marginBottom: '16px'
         }}>
-          <IoBriefcaseOutline size={32} color="white" />
-          <h1 style={{
-            fontSize: '32px',
-            fontWeight: '700',
-            color: 'white',
-            margin: 0
+          Why Join as a Professional Creator?
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '12px'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '12px',
+            background: '#f0f9ff',
+            borderRadius: '8px'
           }}>
-            Become a Professional
-          </h1>
-        </div>
-        <p style={{
-          fontSize: '18px',
-          color: 'rgba(255,255,255,0.9)',
-          margin: 0,
-          maxWidth: '600px',
-          marginLeft: 'auto',
-          marginRight: 'auto'
-        }}>
-          Start earning money by offering your services to clients. Join thousands of successful professionals.
-        </p>
-      </div>
-
-      {/* Benefits */}
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '32px',
-        marginBottom: '24px',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{
-          fontSize: '24px',
-          fontWeight: '700',
-          color: '#1a1a1a',
-          textAlign: 'center',
-          marginBottom: '32px'
-        }}>
-          Why Become a Professional?
-        </h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '24px',
-          maxWidth: '100%'
-        }}>
-          {benefits.map((benefit, index) => (
-            <div key={index} style={{
-              textAlign: 'center',
-              padding: '20px',
-              borderRadius: '12px',
-              background: '#f9fafb',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{ marginBottom: '16px' }}>
-                {benefit.icon}
-              </div>
-              <h3 style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '8px'
-              }}>
-                {benefit.title}
-              </h3>
-              <p style={{
-                fontSize: '14px',
-                color: '#6b7280',
-                margin: 0
-              }}>
-                {benefit.description}
-              </p>
+            <IoWallet size={20} color="#3b82f6" />
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>Get Paid</div>
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>Earn money for bringing traffic</div>
             </div>
-          ))}
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '12px',
+            background: '#f0fdf4',
+            borderRadius: '8px'
+          }}>
+            <IoAnalytics size={20} color="#10b981" />
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>Track Earnings</div>
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>Monitor your revenue and growth</div>
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '12px',
+            background: '#fef3c7',
+            borderRadius: '8px'
+          }}>
+            <IoTrendingUp size={20} color="#f59e0b" />
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>Grow Audience</div>
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>Build your following and influence</div>
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '12px',
+            background: '#f3e8ff',
+            borderRadius: '8px'
+          }}>
+            <MdVerified size={20} color="#8b5cf6" />
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>Verified Creator</div>
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>Build credibility and trust</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Service Categories */}
+      {/* Categories Section */}
       <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '32px',
-        marginBottom: '24px',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
+        padding: '0 16px 24px 16px',
+        background: 'white'
       }}>
         <h2 style={{
-          fontSize: '24px',
-          fontWeight: '700',
+          fontSize: '20px',
+          fontWeight: '600',
           color: '#1a1a1a',
-          textAlign: 'center',
-          marginBottom: '32px'
+          marginBottom: '16px'
         }}>
-          Choose Your Service Category
+          Select Your Professional Category
         </h2>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '20px',
-          maxWidth: '100%'
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '12px'
         }}>
-          {categories.map((category) => (
+          {professionalCategories.map((category) => (
             <div
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => handleCategorySelect(category.id)}
               style={{
-                padding: '24px',
-                borderRadius: '16px',
-                border: selectedCategory === category.id ? '2px solid #667eea' : '1px solid #e5e7eb',
-                background: selectedCategory === category.id ? '#f0f4ff' : 'white',
+                padding: '16px',
+                border: selectedCategory === category.id ? '2px solid #3b82f6' : '2px solid #e5e7eb',
+                borderRadius: '12px',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: selectedCategory === category.id ? '0 4px 12px rgba(102, 126, 234, 0.2)' : '0 2px 8px rgba(0,0,0,0.08)'
+                background: selectedCategory === category.id ? '#eff6ff' : 'white',
+                transition: 'all 0.2s ease'
               }}
             >
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                marginBottom: '12px'
+                marginBottom: '8px'
               }}>
-                <span style={{ fontSize: '24px' }}>{category.icon}</span>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: '#1a1a1a',
-                  margin: 0
-                }}>
-                  {category.name}
-                </h3>
-              </div>
-              <p style={{
-                fontSize: '14px',
-                color: '#6b7280',
-                marginBottom: '16px'
-              }}>
-                {category.description}
-              </p>
-              <div>
-                <h4 style={{
+                <div style={{ color: '#3b82f6' }}>
+                  {category.icon}
+                </div>
+                <div style={{
                   fontSize: '14px',
                   fontWeight: '600',
-                  color: '#1a1a1a',
-                  marginBottom: '8px'
+                  color: '#1a1a1a'
                 }}>
-                  Requirements:
-                </h4>
-                <ul style={{
-                  listStyle: 'none',
-                  padding: 0,
-                  margin: 0
-                }}>
-                  {category.requirements.map((req, index) => (
-                    <li key={index} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '12px',
-                      color: '#6b7280',
-                      marginBottom: '4px'
-                    }}>
-                      <IoCheckmarkCircle size={14} color="#10b981" />
-                      {req}
-                    </li>
-                  ))}
-                </ul>
+                  {category.title}
+                </div>
+              </div>
+              <div style={{
+                fontSize: '12px',
+                color: '#6b7280',
+                marginBottom: '8px',
+                lineHeight: '1.4'
+              }}>
+                {category.description}
+              </div>
+              <div style={{
+                fontSize: '11px',
+                color: '#10b981',
+                marginBottom: '6px'
+              }}>
+                Examples: {category.examples[0]}
+              </div>
+              <div style={{
+                fontSize: '10px',
+                color: '#9ca3af'
+              }}>
+                {category.examples.length} examples
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Verification Status */}
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '32px',
-        marginBottom: '24px',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{
-          fontSize: '24px',
-          fontWeight: '700',
-          color: '#1a1a1a',
-          textAlign: 'center',
-          marginBottom: '32px'
-        }}>
-          Verification Status
-        </h2>
+      {/* Post Item Button */}
+      {selectedCategory && (
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '12px',
-          marginBottom: '24px'
+          padding: '20px 16px',
+          background: 'white',
+          borderTop: '1px solid #e5e7eb'
         }}>
-          <div style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            background: isVerified ? '#10b981' : '#f59e0b',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '24px'
-          }}>
-            {isVerified ? <IoCheckmarkCircle size={32} /> : <IoPersonOutline size={32} />}
-          </div>
-          <div>
-            <h3 style={{
-              fontSize: '18px',
+          <button
+            onClick={handleJoinAsCreator}
+            style={{
+              width: '100%',
+              padding: '16px',
+              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '12px',
+              fontSize: '16px',
               fontWeight: '600',
-              color: '#1a1a1a',
-              margin: 0
-            }}>
-              {isVerified ? 'Verified Account' : 'Pending Verification'}
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#6b7280',
-              margin: 0
-            }}>
-              {isVerified ? 'Your account has been verified' : 'Complete verification to start earning'}
-            </p>
-          </div>
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <IoAdd size={20} />
+            Join as {professionalCategories.find(c => c.id === selectedCategory)?.title}
+          </button>
         </div>
-        {!isVerified && (
-          <div style={{
-            background: '#fef3c7',
-            border: '1px solid #f59e0b',
-            borderRadius: '12px',
-            padding: '16px',
-            textAlign: 'center'
-          }}>
-            <p style={{
-              fontSize: '14px',
-              color: '#92400e',
-              margin: 0
-            }}>
-              ⚠️ Verification typically takes 24-48 hours. You can still apply for professional status while verification is pending.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Upgrade Button */}
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '32px',
-        textAlign: 'center',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{
-          fontSize: '24px',
-          fontWeight: '700',
-          color: '#1a1a1a',
-          marginBottom: '16px'
-        }}>
-          Ready to Start Earning?
-        </h2>
-        <p style={{
-          fontSize: '16px',
-          color: '#6b7280',
-          marginBottom: '32px',
-          maxWidth: '500px',
-          marginLeft: 'auto',
-          marginRight: 'auto'
-        }}>
-          Join thousands of successful professionals who are already earning on our platform.
-        </p>
-        <button
-          onClick={handleUpgrade}
-          disabled={!selectedCategory}
-          style={{
-            background: selectedCategory ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e5e7eb',
-            color: selectedCategory ? 'white' : '#9ca3af',
-            padding: '16px 32px',
-            borderRadius: '12px',
-            border: 'none',
-            fontSize: '18px',
-            fontWeight: '600',
-            cursor: selectedCategory ? 'pointer' : 'not-allowed',
-            transition: 'all 0.3s ease',
-            boxShadow: selectedCategory ? '0 4px 12px rgba(102, 126, 234, 0.3)' : 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            margin: '0 auto'
-          }}
-        >
-          <IoRocket size={20} />
-          {selectedCategory ? 'Apply for Professional Status' : 'Select a Category First'}
-        </button>
-        {selectedCategory && (
-          <p style={{
-            fontSize: '14px',
-            color: '#6b7280',
-            marginTop: '16px',
-            margin: 0
-          }}>
-            Application fee: $25 (one-time)
-          </p>
-        )}
-      </div>
+      )}
     </div>
   );
 };

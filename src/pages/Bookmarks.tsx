@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { IoHeart, IoHeartOutline, IoBookmark, IoBookmarkOutline, IoLocationOutline, IoStar, IoEllipsisVertical } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import { IoHeart, IoHeartOutline, IoBookmark, IoBookmarkOutline, IoLocationOutline, IoStar, IoEllipsisVertical, IoArrowBack } from 'react-icons/io5';
 import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 
-const Bookmarks = () => {
+const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('providers');
   const [likedProviders, setLikedProviders] = useState(new Set(['1', '3']));
   const [savedProviders, setSavedProviders] = useState(new Set(['2', '4']));
@@ -128,71 +130,44 @@ const Bookmarks = () => {
       <div style={{
         background: 'white',
         padding: '20px 16px',
-        borderBottom: '1px solid #e5e7eb'
+        borderBottom: '1px solid #e5e7eb',
+        position: 'relative'
       }}>
-        <h1 style={{
-          fontSize: '24px',
-          fontWeight: '700',
-          color: '#1a1a1a',
-          margin: 0,
-          textAlign: 'center'
+        {/* Back Arrow */}
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '16px',
+            transform: 'translateY(-50%)',
+            background: 'rgba(0, 0, 0, 0.1)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10
+          }}
+        >
+          <IoArrowBack size={20} color="#1a1a1a" />
+        </button>
+        
+        {/* Title */}
+        <div style={{
+          textAlign: 'center',
+          fontSize: '20px',
+          fontWeight: '600',
+          color: '#1a1a1a'
         }}>
           Bookmarks
-        </h1>
-        <p style={{
-          fontSize: '16px',
-          color: '#6b7280',
-          margin: '8px 0 0 0',
-          textAlign: 'center'
-        }}>
-          Your saved providers and favorites
-        </p>
-      </div>
-
-      {/* Tabs */}
-      <div style={{
-        background: 'white',
-        borderBottom: '1px solid #e5e7eb'
-      }}>
-        <div style={{
-          display: 'flex',
-          maxWidth: '600px',
-          margin: '0 auto'
-        }}>
-          <button
-            onClick={() => setActiveTab('providers')}
-            style={{
-              flex: 1,
-              padding: '16px',
-              background: activeTab === 'providers' ? '#f3f4f6' : 'white',
-              border: 'none',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: activeTab === 'providers' ? '#1a1a1a' : '#6b7280',
-              cursor: 'pointer',
-              borderBottom: activeTab === 'providers' ? '2px solid #3b82f6' : 'none'
-            }}
-          >
-            Saved Providers
-          </button>
-          <button
-            onClick={() => setActiveTab('posts')}
-            style={{
-              flex: 1,
-              padding: '16px',
-              background: activeTab === 'posts' ? '#f3f4f6' : 'white',
-              border: 'none',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: activeTab === 'posts' ? '#1a1a1a' : '#6b7280',
-              cursor: 'pointer',
-              borderBottom: activeTab === 'posts' ? '2px solid #3b82f6' : 'none'
-            }}
-          >
-            Liked Posts
-          </button>
         </div>
       </div>
+
+
 
       {/* Content */}
       <div style={{ padding: '16px' }}>

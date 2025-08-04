@@ -396,7 +396,11 @@ const Erotic = () => {
               boxShadow: activeTab === 'match' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
             }}
           >
-            <FaHeart size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+            <FaHeart size={16} style={{ 
+              marginRight: '8px', 
+              verticalAlign: 'middle',
+              color: activeTab === 'match' ? '#3b82f6' : '#6b7280'
+            }} />
             Match
           </button>
           <button
@@ -414,7 +418,11 @@ const Erotic = () => {
               boxShadow: activeTab === 'wellness' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
             }}
           >
-            <BiSpa size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+            <BiSpa size={16} style={{ 
+              marginRight: '8px', 
+              verticalAlign: 'middle',
+              color: activeTab === 'wellness' ? '#3b82f6' : '#6b7280'
+            }} />
             Wellness
           </button>
           <button
@@ -432,7 +440,11 @@ const Erotic = () => {
               boxShadow: activeTab === 'escorts' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
             }}
           >
-            <MdDiamond size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+            <MdDiamond size={16} style={{ 
+              marginRight: '8px', 
+              verticalAlign: 'middle',
+              color: activeTab === 'escorts' ? '#3b82f6' : '#6b7280'
+            }} />
             Escorts
           </button>
         </div>
@@ -512,6 +524,7 @@ const Erotic = () => {
               <circle cx="12" cy="18" r="2"/>
             </svg>
           </button>
+
         </div>
       </div>
 

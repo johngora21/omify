@@ -3,6 +3,38 @@ import { useNavigate } from 'react-router-dom';
 import { IoHeart, IoHeartOutline, IoPlay, IoSearchOutline, IoRadio } from 'react-icons/io5';
 import { FaBookmark, FaRegBookmark, FaStar } from 'react-icons/fa';
 
+// TMDB API Configuration
+const TMDB_API_KEY = 'e1dd3da695231aea7f2d51762801800e';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
+interface Movie {
+  id: string;
+  title: string;
+  genre: string;
+  rating: number;
+  year: number;
+  duration: string;
+  poster: string;
+  description: string;
+  director: string;
+  cast: string[];
+  isNew: boolean;
+  isTrending: boolean;
+}
+
+interface TMDBMovie {
+  id: number;
+  title: string;
+  overview: string;
+  poster_path: string;
+  release_date: string;
+  vote_average: number;
+  vote_count: number;
+  genre_ids: number[];
+  popularity: number;
+}
+
 const Entertainment = () => {
   const navigate = useNavigate();
   const [likedContent, setLikedContent] = useState<Set<string>>(new Set());
@@ -10,6 +42,9 @@ const Entertainment = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('movies');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     genres: [] as string[],
     yearRange: { min: 1990, max: 2024 },
@@ -17,177 +52,106 @@ const Entertainment = () => {
     duration: 'all' as 'all' | 'short' | 'medium' | 'long'
   });
 
-  const movies = [
-    {
-      id: '1',
-      title: 'The Dark Knight',
-      genre: 'Action',
-      rating: 4.9,
-      year: 2008,
-      duration: '2h 32m',
-      poster: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=300&h=450&fit=crop',
-      description: 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
-      director: 'Christopher Nolan',
-      cast: ['Christian Bale', 'Heath Ledger', 'Aaron Eckhart'],
-      isNew: false,
-      isTrending: true
-    },
-    {
-      id: '2',
-      title: 'Inception',
-      genre: 'Sci-Fi',
-      rating: 4.8,
-      year: 2010,
-      duration: '2h 28m',
-      poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=450&fit=crop',
-      description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.',
-      director: 'Christopher Nolan',
-      cast: ['Leonardo DiCaprio', 'Joseph Gordon-Levitt', 'Ellen Page'],
-      isNew: false,
-      isTrending: true
-    },
-    {
-      id: '3',
-      title: 'The Matrix',
-      genre: 'Sci-Fi',
-      rating: 4.7,
-      year: 1999,
-      duration: '2h 16m',
-      poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
-      description: 'A computer programmer discovers that reality as he knows it is a simulation created by machines, and joins a rebellion to break free.',
-      director: 'Lana Wachowski',
-      cast: ['Keanu Reeves', 'Laurence Fishburne', 'Carrie-Anne Moss'],
-      isNew: false,
-      isTrending: false
-    },
-    {
-      id: '4',
-      title: 'The Shawshank Redemption',
-      genre: 'Drama',
-      rating: 4.9,
-      year: 1994,
-      duration: '2h 22m',
-      poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
-      description: 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
-      director: 'Frank Darabont',
-      cast: ['Tim Robbins', 'Morgan Freeman', 'Bob Gunton'],
-      isNew: false,
-      isTrending: false
-    },
-    {
-      id: '5',
-      title: 'The Hangover',
-      genre: 'Comedy',
-      rating: 4.5,
-      year: 2009,
-      duration: '1h 40m',
-      poster: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=300&h=450&fit=crop',
-      description: 'Three friends wake up from a bachelor party in Las Vegas, with no memory of the previous night and the bachelor missing.',
-      director: 'Todd Phillips',
-      cast: ['Bradley Cooper', 'Ed Helms', 'Zach Galifianakis'],
-      isNew: false,
-      isTrending: false
-    },
-    {
-      id: '6',
-      title: 'The Conjuring',
-      genre: 'Horror',
-      rating: 4.6,
-      year: 2013,
-      duration: '1h 52m',
-      poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=450&fit=crop',
-      description: 'Paranormal investigators Ed and Lorraine Warren work to help a family terrorized by a dark presence in their farmhouse.',
-      director: 'James Wan',
-      cast: ['Patrick Wilson', 'Vera Farmiga', 'Ron Livingston'],
-      isNew: false,
-      isTrending: false
-    },
-    {
-      id: '7',
-      title: 'Breaking Bad',
-      genre: 'Series',
-      rating: 4.9,
-      year: 2008,
-      duration: '5 Seasons',
-      poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=450&fit=crop',
-      description: 'A high school chemistry teacher turned methamphetamine manufacturer partners with a former student to secure his family\'s financial future.',
-      director: 'Vince Gilligan',
-      cast: ['Bryan Cranston', 'Aaron Paul', 'Anna Gunn'],
-      isNew: false,
-      isTrending: true
-    },
-    {
-      id: '8',
-      title: 'Game of Thrones',
-      genre: 'Series',
-      rating: 4.8,
-      year: 2011,
-      duration: '8 Seasons',
-      poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
-      description: 'Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.',
-      director: 'David Benioff',
-      cast: ['Emilia Clarke', 'Kit Harington', 'Peter Dinklage'],
-      isNew: false,
-      isTrending: true
-    },
-    {
-      id: '9',
-      title: 'Attack on Titan',
-      genre: 'Anime',
-      rating: 4.9,
-      year: 2013,
-      duration: '4 Seasons',
-      poster: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=300&h=450&fit=crop',
-      description: 'Humanity\'s last stand against giant humanoid creatures known as Titans in a world where the remnants of humanity live behind massive walls.',
-      director: 'Tetsurō Araki',
-      cast: ['Yuki Kaji', 'Yui Ishikawa', 'Marina Inoue'],
-      isNew: false,
-      isTrending: true
-    },
-    {
-      id: '10',
-      title: 'Demon Slayer',
-      genre: 'Anime',
-      rating: 4.8,
-      year: 2019,
-      duration: '3 Seasons',
-      poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=450&fit=crop',
-      description: 'A young boy becomes a demon slayer after his family is attacked and his sister is turned into a demon.',
-      director: 'Haruo Sotozaki',
-      cast: ['Natsuki Hanae', 'Akari Kitō', 'Hiro Shimono'],
-      isNew: true,
-      isTrending: true
-    },
-    {
-      id: '11',
-      title: 'Spider-Man: Into the Spider-Verse',
-      genre: 'Animation',
-      rating: 4.9,
-      year: 2018,
-      duration: '1h 57m',
-      poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop',
-      description: 'Teen Miles Morales becomes the Spider-Man of his universe and must join with five spider-powered individuals from other dimensions.',
-      director: 'Bob Persichetti',
-      cast: ['Shameik Moore', 'Jake Johnson', 'Hailee Steinfeld'],
-      isNew: false,
-      isTrending: true
-    },
-    {
-      id: '12',
-      title: 'Toy Story 4',
-      genre: 'Animation',
-      rating: 4.7,
-      year: 2019,
-      duration: '1h 40m',
-      poster: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=300&h=450&fit=crop',
-      description: 'When a new toy called Forky joins Woody and the gang, a road trip alongside old and new friends reveals how big the world can be.',
-      director: 'Josh Cooley',
-      cast: ['Tom Hanks', 'Tim Allen', 'Annie Potts'],
-      isNew: false,
-      isTrending: false
-    }
-  ];
+  // Genre mapping
+  const genreMap: { [key: number]: string } = {
+    28: 'Action',
+    12: 'Adventure',
+    16: 'Animation',
+    35: 'Comedy',
+    80: 'Crime',
+    99: 'Documentary',
+    18: 'Drama',
+    10751: 'Family',
+    14: 'Fantasy',
+    36: 'History',
+    27: 'Horror',
+    10402: 'Music',
+    9648: 'Mystery',
+    10749: 'Romance',
+    878: 'Sci-Fi',
+    10770: 'TV Movie',
+    53: 'Thriller',
+    10752: 'War',
+    37: 'Western'
+  };
 
+  // Fetch movies from TMDB API
+  const fetchMovies = async (endpoint: string) => {
+    try {
+      const response = await fetch(`${TMDB_BASE_URL}/movie/${endpoint}?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch movies');
+      }
+      const data = await response.json();
+      return data.results;
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      throw error;
+    }
+  };
+
+  // Convert TMDB movie data to our format
+  const convertTMDBMovie = (tmdbMovie: TMDBMovie): Movie => {
+    const releaseYear = new Date(tmdbMovie.release_date).getFullYear();
+    const genres = tmdbMovie.genre_ids.map(id => genreMap[id] || 'Unknown').slice(0, 2);
+    
+    return {
+      id: tmdbMovie.id.toString(),
+      title: tmdbMovie.title,
+      genre: genres.join(', '),
+      rating: tmdbMovie.vote_average,
+      year: releaseYear,
+      duration: '2h 0m', // TMDB doesn't provide duration in basic endpoint
+      poster: tmdbMovie.poster_path ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` : 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=300&h=450&fit=crop',
+      description: tmdbMovie.overview || 'No description available',
+      director: 'Unknown', // Would need additional API call for director
+      cast: [], // Would need additional API call for cast
+      isNew: new Date(tmdbMovie.release_date) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // New if released within 30 days
+      isTrending: tmdbMovie.popularity > 100 // Trending if popularity > 100
+    };
+  };
+
+  // Load movies based on active tab
+  const loadMovies = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      let moviesData: TMDBMovie[] = [];
+      
+      switch (activeTab) {
+        case 'top-rated':
+          moviesData = await fetchMovies('top_rated');
+          break;
+        case 'popular':
+          moviesData = await fetchMovies('popular');
+          break;
+        case 'now-playing':
+          moviesData = await fetchMovies('now_playing');
+          break;
+        case 'upcoming':
+          moviesData = await fetchMovies('upcoming');
+          break;
+        default:
+          moviesData = await fetchMovies('popular'); // Default to popular
+      }
+      
+      const convertedMovies = moviesData.map(convertTMDBMovie);
+      setMovies(convertedMovies);
+    } catch (error) {
+      setError('Failed to load movies. Please try again later.');
+      console.error('Error loading movies:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load movies when component mounts or active tab changes
+  useEffect(() => {
+    if (activeTab === 'movies' || activeTab === 'top-rated' || activeTab === 'popular' || activeTab === 'now-playing' || activeTab === 'upcoming') {
+      loadMovies();
+    }
+  }, [activeTab]);
 
 
   const matches = [
@@ -349,7 +313,10 @@ const Entertainment = () => {
 
   const getCurrentContent = () => {
     switch (activeTab) {
-      case 'movies':
+      case 'popular':
+      case 'top-rated':
+      case 'now-playing':
+      case 'upcoming':
         return movies;
       case 'sports':
         return matches;
@@ -400,7 +367,6 @@ const Entertainment = () => {
       paddingBottom: '80px'
     }}>
 
-
       {/* Tab Navigation */}
       <div style={{
         backgroundColor: 'white',
@@ -414,7 +380,10 @@ const Entertainment = () => {
           padding: '16px 0'
         }}>
           {[
-            { id: 'movies', label: 'Movies' },
+            { id: 'popular', label: 'Popular' },
+            { id: 'top-rated', label: 'Top Rated' },
+            { id: 'now-playing', label: 'Now Playing' },
+            { id: 'upcoming', label: 'Upcoming' },
             { id: 'sports', label: 'Sports' }
           ].map((tab) => (
             <button
@@ -507,403 +476,477 @@ const Entertainment = () => {
               <circle cx="12" cy="18" r="2"/>
             </svg>
           </button>
+          
+          <button
+            onClick={() => navigate('/movies')}
+            style={{
+              background: '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+          >
+            <FaBookmark size={20} />
+          </button>
         </div>
       </div>
 
       {/* Content Grid */}
       <div style={{ padding: '16px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '16px',
-          maxWidth: '800px',
-          margin: '0 auto'
-        }}>
-          {activeTab === 'sports' ? (
-            // Sports content rendering
-            filteredContent.map((content) => {
-              const match = content as any;
-              return (
-              <div key={match.id} style={{
-                backgroundColor: 'white',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                transition: 'transform 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        {/* Loading State */}
+        {loading && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '40px',
+            color: '#6b7280'
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '16px'
+            }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                border: '4px solid #e5e7eb',
+                borderTop: '4px solid #3b82f6',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }}></div>
+              <span>Loading movies...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '40px',
+            color: '#ef4444'
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '16px',
+              textAlign: 'center'
+            }}>
+              <span style={{ fontSize: '18px', fontWeight: '600' }}>Error</span>
+              <span>{error}</span>
+              <button
+                onClick={loadMovies}
+                style={{
+                  background: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '12px 24px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
               >
-                {/* Match Image */}
-                <div style={{ position: 'relative' }}>
-                  <img
-                    src={match.poster}
-                    alt={`${match.teamA} vs ${match.teamB}`}
-                    style={{
-                      width: '100%',
-                      height: '200px',
-                      objectFit: 'cover'
-                    }}
-                    onClick={() => handlePlay(match.id)}
-                  />
-                  {match.isLive && (
+                Try Again
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Content Grid */}
+        {!loading && !error && (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '16px',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
+            {activeTab === 'sports' ? (
+              // Sports content rendering
+              filteredContent.map((content) => {
+                const match = content as any;
+                return (
+                <div key={match.id} style={{
+                  backgroundColor: 'white',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                  transition: 'transform 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  {/* Match Image */}
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      src={match.poster}
+                      alt={`${match.teamA} vs ${match.teamB}`}
+                      style={{
+                        width: '100%',
+                        height: '200px',
+                        objectFit: 'cover'
+                      }}
+                      onClick={() => handlePlay(match.id)}
+                    />
+                    {match.isLive && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '12px',
+                        left: '12px',
+                        background: '#ef4444',
+                        color: 'white',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        <IoRadio size={12} />
+                        LIVE
+                      </div>
+                    )}
+                    
+                    {/* Quality Options Inside Image */}
                     <div style={{
                       position: 'absolute',
-                      top: '12px',
+                      bottom: '12px',
                       left: '12px',
-                      background: '#ef4444',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
-                      fontWeight: '600',
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
+                      gap: '6px'
                     }}>
-                      <IoRadio size={12} />
-                      LIVE
+                      {match.quality.map((quality) => (
+                        <button
+                          key={quality}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePlay(match.id);
+                          }}
+                          style={{
+                            background: 'rgba(0,0,0,0.8)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '4px 8px',
+                            fontSize: '10px',
+                            fontWeight: '500',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          {quality}
+                        </button>
+                      ))}
                     </div>
-                  )}
+                  </div>
+
+                  {/* Match Info */}
+                  <div style={{ padding: '16px' }}>
+                    {/* Teams */}
+                    <div style={{ textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '12px',
+                        marginBottom: '8px'
+                      }}>
+                        <span style={{
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          color: '#1a1a1a'
+                        }}>
+                          {match.teamA}
+                        </span>
+                        <span style={{
+                          fontSize: '14px',
+                          color: '#6b7280',
+                          fontWeight: '500'
+                        }}>
+                          vs
+                        </span>
+                        <span style={{
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          color: '#1a1a1a'
+                        }}>
+                          {match.teamB}
+                        </span>
+                      </div>
+                      
+                      {/* Score/Time */}
+                      <div style={{
+                        fontSize: '18px',
+                        fontWeight: '700',
+                        color: match.isLive ? '#ef4444' : '#6b7280',
+                        marginBottom: '8px'
+                      }}>
+                        {match.score}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+              })
+            ) : (
+              // Movies/TV Shows content rendering
+              filteredContent.map((content) => (
+              <div key={content.id} style={{
+                backgroundColor: 'white',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                border: '1px solid #f1f5f9'
+              }}
+              onClick={() => handlePlay(content.id)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+              }}
+              >
+                {/* Poster */}
+                <div style={{ position: 'relative' }}>
+                  <img
+                    src={content.poster}
+                    alt={content.title}
+                    style={{
+                      width: '100%',
+                      height: '280px',
+                      objectFit: 'cover'
+                    }}
+                  />
+                  {/* Overlay with play button */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6))',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease'
+                  }}
+                  className="hover:opacity-100"
+                  >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlay(content.id);
+                      }}
+                      style={{
+                        background: 'rgba(59, 130, 246, 0.9)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '56px',
+                        height: '56px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        backdropFilter: 'blur(10px)'
+                      }}
+                    >
+                      <IoPlay size={24} />
+                    </button>
+                  </div>
                   
-                  {/* Quality Options Inside Image */}
+                  {/* Badges */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px'
+                  }}>
+                    {content.isTrending && (
+                      <div style={{
+                        background: '#3b82f6',
+                        color: 'white',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        fontSize: '10px',
+                        fontWeight: '600',
+                        textTransform: 'uppercase'
+                      }}>
+                        🔥 Trending
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Rating */}
                   <div style={{
                     position: 'absolute',
                     bottom: '12px',
-                    left: '12px',
-                    display: 'flex',
-                    gap: '6px'
-                  }}>
-                    {match.quality.map((quality) => (
-                      <button
-                        key={quality}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlay(match.id);
-                        }}
-                        style={{
-                          background: 'rgba(0,0,0,0.8)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '6px',
-                          padding: '4px 8px',
-                          fontSize: '10px',
-                          fontWeight: '500',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease'
-                        }}
-                      >
-                        {quality}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Match Info */}
-                <div style={{ padding: '16px' }}>
-                  {/* Teams */}
-                  <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '12px',
-                      marginBottom: '8px'
-                    }}>
-                      <span style={{
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: '#1a1a1a'
-                      }}>
-                        {match.teamA}
-                      </span>
-                      <span style={{
-                        fontSize: '14px',
-                        color: '#6b7280',
-                        fontWeight: '500'
-                      }}>
-                        vs
-                      </span>
-                      <span style={{
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: '#1a1a1a'
-                      }}>
-                        {match.teamB}
-                      </span>
-                    </div>
-                    
-                    {/* Score/Time */}
-                    <div style={{
-                      fontSize: '18px',
-                      fontWeight: '700',
-                      color: match.isLive ? '#ef4444' : '#6b7280',
-                      marginBottom: '8px'
-                    }}>
-                      {match.score}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-            })
-          ) : (
-            // Movies/TV Shows content rendering
-            filteredContent.map((content) => (
-            <div key={content.id} style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              border: '1px solid #f1f5f9'
-            }}
-            onClick={() => handlePlay(content.id)}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-            }}
-            >
-              {/* Poster */}
-              <div style={{ position: 'relative' }}>
-                <img
-                  src={content.poster}
-                  alt={content.title}
-                  style={{
-                    width: '100%',
-                    height: '280px',
-                    objectFit: 'cover'
-                  }}
-                />
-                {/* Overlay with play button */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6))',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: 0,
-                  transition: 'opacity 0.3s ease'
-                }}
-                className="hover:opacity-100"
-                >
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePlay(content.id);
-                    }}
-                    style={{
-                      background: 'rgba(59, 130, 246, 0.9)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '56px',
-                      height: '56px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    <IoPlay size={24} />
-                  </button>
-                </div>
-                
-                {/* Badges */}
-                <div style={{
-                  position: 'absolute',
-                  top: '12px',
-                  left: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
-                }}>
-                  {content.isNew && (
-                    <div style={{
-                      background: '#10b981',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '6px',
-                      fontSize: '10px',
-                      fontWeight: '600',
-                      textTransform: 'uppercase'
-                    }}>
-                      New
-                    </div>
-                  )}
-                  {content.isTrending && (
-                    <div style={{
-                      background: '#f59e0b',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '6px',
-                      fontSize: '10px',
-                      fontWeight: '600',
-                      textTransform: 'uppercase'
-                    }}>
-                      🔥 Trending
-                    </div>
-                  )}
-                </div>
-
-                {/* Rating */}
-                <div style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '12px',
-                  background: 'rgba(0,0,0,0.8)',
-                  color: 'white',
-                  padding: '4px 8px',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}>
-                  <FaStar size={12} color="#fbbf24" />
-                  {content.rating}
-                </div>
-              </div>
-
-              {/* Content Info */}
-              <div style={{ padding: '16px' }}>
-                {/* Title and Year */}
-                <div style={{ marginBottom: '8px' }}>
-                  <h3 style={{
-                    fontSize: '16px',
-                    fontWeight: '700',
-                    color: '#1a1a1a',
-                    margin: 0,
-                    marginBottom: '4px',
-                    lineHeight: '1.2'
-                  }}>
-                    {content.title}
-                  </h3>
-                  <div style={{
+                    right: '12px',
+                    background: 'rgba(0,0,0,0.8)',
+                    color: 'white',
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: '600',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '13px',
-                    color: '#6b7280'
+                    gap: '4px'
                   }}>
-                    <span>{content.year}</span>
-                    <span>•</span>
-                    <span>{content.duration}</span>
-                    <span>•</span>
-                    <span style={{
-                      backgroundColor: '#f3f4f6',
-                      color: '#374151',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      fontSize: '11px',
-                      fontWeight: '500'
-                    }}>
-                      {content.genre}
-                    </span>
+                    <FaStar size={12} color="#fbbf24" />
+                    {content.rating}
                   </div>
                 </div>
 
-                {/* Description */}
-                <p style={{
-                  fontSize: '13px',
-                  color: '#6b7280',
-                  lineHeight: '1.4',
-                  marginBottom: '12px',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  height: '36px'
-                }}>
-                  {content.description}
-                </p>
-
-                {/* Cast */}
-                <div style={{
-                  fontSize: '12px',
-                  color: '#9ca3af',
-                  marginBottom: '12px',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden'
-                }}>
-                  <span style={{ fontWeight: '500', color: '#6b7280' }}>Cast: </span>
-                  {content.cast.slice(0, 3).join(', ')}
-                  {content.cast.length > 3 && '...'}
-                </div>
-
-                {/* Action Buttons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePlay(content.id);
-                    }}
-                    style={{
-                      flex: 1,
-                      background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '10px 16px',
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
+                {/* Content Info */}
+                <div style={{ padding: '16px' }}>
+                  {/* Title and Year */}
+                  <div style={{ marginBottom: '8px' }}>
+                    <h3 style={{
+                      fontSize: '16px',
+                      fontWeight: '700',
+                      color: '#1a1a1a',
+                      margin: 0,
+                      marginBottom: '4px',
+                      lineHeight: '1.2'
+                    }}>
+                      {content.title}
+                    </h3>
+                    <div style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  >
-                    <IoPlay size={16} />
-                    Watch Now
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSave(content.id);
-                    }}
-                    style={{
-                      background: 'none',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      padding: '10px',
-                      cursor: 'pointer',
-                      color: savedContent.has(content.id) ? '#ffa502' : '#6b7280',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#ffa502'}
-                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e5e7eb'}
-                  >
-                    {savedContent.has(content.id) ? (
-                      <FaBookmark size={16} />
-                    ) : (
-                      <FaRegBookmark size={16} />
-                    )}
-                  </button>
+                      gap: '8px',
+                      fontSize: '13px',
+                      color: '#6b7280'
+                    }}>
+                      <span>{content.year}</span>
+                      <span>•</span>
+                      <span>{content.duration}</span>
+                      <span>•</span>
+                      <span style={{
+                        backgroundColor: '#f3f4f6',
+                        color: '#374151',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        fontWeight: '500'
+                      }}>
+                        {content.genre}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p style={{
+                    fontSize: '13px',
+                    color: '#6b7280',
+                    lineHeight: '1.4',
+                    marginBottom: '12px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    height: '36px'
+                  }}>
+                    {content.description}
+                  </p>
+
+                  {/* Cast */}
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#9ca3af',
+                    marginBottom: '12px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}>
+                    <span style={{ fontWeight: '500', color: '#6b7280' }}>Cast: </span>
+                    {content.cast.slice(0, 3).join(', ')}
+                    {content.cast.length > 3 && '...'}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlay(content.id);
+                      }}
+                      style={{
+                        flex: 1,
+                        background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '10px 16px',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      <IoPlay size={16} />
+                      Watch Now
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSave(content.id);
+                      }}
+                      style={{
+                        background: 'none',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '10px',
+                        cursor: 'pointer',
+                        color: savedContent.has(content.id) ? '#ffa502' : '#6b7280',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#ffa502'}
+                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e5e7eb'}
+                    >
+                      {savedContent.has(content.id) ? (
+                        <FaBookmark size={16} />
+                      ) : (
+                        <FaRegBookmark size={16} />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))
+          )}
+          </div>
         )}
-        </div>
       </div>
 
       {/* Filter Modal */}

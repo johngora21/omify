@@ -1,17 +1,49 @@
 import { useState } from 'react';
-import { IoPersonOutline, IoShieldCheckmarkOutline, IoNotificationsOutline, IoColorPaletteOutline, IoLanguageOutline, IoHelpCircleOutline, IoLogOutOutline, IoTrashOutline, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import { 
+  IoPersonOutline, 
+  IoShieldCheckmarkOutline, 
+  IoNotificationsOutline, 
+  IoColorPaletteOutline, 
+  IoLanguageOutline, 
+  IoHelpCircleOutline, 
+  IoLogOutOutline, 
+  IoTrashOutline, 
+  IoEyeOutline, 
+  IoEyeOffOutline,
+  IoArrowBack,
+  IoChevronForward,
+  IoMoonOutline,
+  IoSunnyOutline,
+  IoVolumeHighOutline,
+  IoVolumeMuteOutline,
+  IoLockClosedOutline,
+  IoMailOutline,
+  IoCallOutline,
+  IoLocationOutline,
+  IoGlobeOutline,
+  IoHeartOutline,
+  IoBookmarkOutline,
+  IoStarOutline,
+  IoCloseOutline,
+  IoCardOutline
+} from 'react-icons/io5';
 import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 
-const Settings = () => {
-  const [activeSection, setActiveSection] = useState('profile');
+const Settings = ({ onMenuClick }: { onMenuClick?: () => void }) => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [notifications, setNotifications] = useState({
     messages: true,
     bookings: true,
     promotions: false,
-    updates: true
+    updates: true,
+    newMatches: true,
+    nearbyProviders: false
   });
+  const [theme, setTheme] = useState('light');
+  const [language, setLanguage] = useState('English');
 
   const mockUser = {
     name: 'Alex Johnson',
@@ -19,7 +51,8 @@ const Settings = () => {
     phone: '+1 (555) 123-4567',
     location: 'San Francisco, CA',
     language: 'English',
-    theme: 'Light'
+    theme: 'Light',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
   };
 
   const handleLogout = () => {
@@ -32,6 +65,87 @@ const Settings = () => {
     console.log('Deleting account...');
   };
 
+  const toggleNotification = (key: string) => {
+    setNotifications(prev => ({
+      ...prev,
+      [key]: !prev[key as keyof typeof prev]
+    }));
+  };
+
+  const settingsSections = [
+    {
+      title: 'Account',
+      items: [
+        {
+          icon: <IoShieldCheckmarkOutline size={20} />,
+          title: 'Privacy & Security',
+          subtitle: 'Manage your account security',
+          action: 'navigate',
+          color: '#10b981'
+        },
+        {
+          icon: <IoNotificationsOutline size={20} />,
+          title: 'Notifications',
+          subtitle: 'Customize your notifications',
+          action: 'navigate',
+          color: '#f59e0b'
+        }
+      ]
+    },
+    {
+      title: 'Preferences',
+      items: [
+        {
+          icon: <IoColorPaletteOutline size={20} />,
+          title: 'Appearance',
+          subtitle: 'Dark mode and themes',
+          action: 'navigate',
+          color: '#8b5cf6'
+        },
+        {
+          icon: <IoLanguageOutline size={20} />,
+          title: 'Language',
+          subtitle: 'Change app language',
+          action: 'navigate',
+          color: '#ef4444'
+        },
+        {
+          icon: <IoVolumeHighOutline size={20} />,
+          title: 'Sound & Haptics',
+          subtitle: 'Audio and vibration settings',
+          action: 'navigate',
+          color: '#06b6d4'
+        }
+      ]
+    },
+    {
+      title: 'Support',
+      items: [
+        {
+          icon: <IoHelpCircleOutline size={20} />,
+          title: 'Help & Support',
+          subtitle: 'Get help and contact us',
+          action: 'navigate',
+          color: '#84cc16'
+        },
+        {
+          icon: <IoStarOutline size={20} />,
+          title: 'Rate App',
+          subtitle: 'Rate us on app store',
+          action: 'navigate',
+          color: '#f97316'
+        },
+        {
+          icon: <IoCardOutline size={20} />,
+          title: 'Payment Details',
+          subtitle: 'Manage payment methods',
+          action: 'navigate',
+          color: '#3b82f6'
+        }
+      ]
+    }
+  ];
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -41,11 +155,33 @@ const Settings = () => {
       {/* Header */}
       <div style={{
         background: 'white',
-        padding: '20px 16px',
-        borderBottom: '1px solid #e5e7eb'
+        padding: '16px',
+        borderBottom: '1px solid #e5e7eb',
+        position: 'relative'
       }}>
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '16px',
+            transform: 'translateY(-50%)',
+            background: 'rgba(0, 0, 0, 0.1)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10
+          }}
+        >
+          <IoArrowBack size={20} color="#1a1a1a" />
+        </button>
         <h1 style={{
-          fontSize: '24px',
+          fontSize: '20px',
           fontWeight: '700',
           color: '#1a1a1a',
           margin: 0,
@@ -55,734 +191,201 @@ const Settings = () => {
         </h1>
       </div>
 
-      <div style={{
-        display: 'flex',
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '16px'
-      }}>
-        {/* Sidebar */}
-        <div style={{
-          width: '200px',
-          background: 'white',
-          borderRadius: '16px',
-          padding: '20px',
-          marginRight: '16px',
-          height: 'fit-content',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              <div style={{
+          padding: '16px',
+          maxWidth: '600px',
+          margin: '0 auto'
         }}>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px'
-          }}>
-            <button
-              onClick={() => setActiveSection('profile')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                background: activeSection === 'profile' ? '#f3f4f6' : 'transparent',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: activeSection === 'profile' ? '#1a1a1a' : '#6b7280',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              <IoPersonOutline size={20} />
-              Profile
-            </button>
-            <button
-              onClick={() => setActiveSection('security')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                background: activeSection === 'security' ? '#f3f4f6' : 'transparent',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: activeSection === 'security' ? '#1a1a1a' : '#6b7280',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              <IoShieldCheckmarkOutline size={20} />
-              Security
-            </button>
-            <button
-              onClick={() => setActiveSection('notifications')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                background: activeSection === 'notifications' ? '#f3f4f6' : 'transparent',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: activeSection === 'notifications' ? '#1a1a1a' : '#6b7280',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              <IoNotificationsOutline size={20} />
-              Notifications
-            </button>
-            <button
-              onClick={() => setActiveSection('appearance')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                background: activeSection === 'appearance' ? '#f3f4f6' : 'transparent',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: activeSection === 'appearance' ? '#1a1a1a' : '#6b7280',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              <IoColorPaletteOutline size={20} />
-              Appearance
-            </button>
-            <button
-              onClick={() => setActiveSection('language')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                background: activeSection === 'language' ? '#f3f4f6' : 'transparent',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: activeSection === 'language' ? '#1a1a1a' : '#6b7280',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              <IoLanguageOutline size={20} />
-              Language
-            </button>
-            <button
-              onClick={() => setActiveSection('help')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                background: activeSection === 'help' ? '#f3f4f6' : 'transparent',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '500',
-                color: activeSection === 'help' ? '#1a1a1a' : '#6b7280',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              <IoHelpCircleOutline size={20} />
-              Help & Support
-            </button>
+
+        {/* Settings Sections */}
+        {settingsSections.map((section, sectionIndex) => (
+          <div key={sectionIndex} style={{ marginBottom: '24px' }}>
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#374151',
+              margin: '0 0 12px 0',
+              paddingLeft: '4px'
+            }}>
+              {section.title}
+            </h3>
+            <div style={{
+              background: 'white',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              {section.items.map((item, itemIndex) => (
+                <div key={itemIndex}>
+                  <button
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '16px',
+                      padding: '16px 20px',
+                      background: 'white',
+                      border: 'none',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      borderBottom: itemIndex < section.items.length - 1 ? '1px solid #f3f4f6' : 'none'
+                    }}
+                  >
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '12px',
+                      background: item.color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <div style={{ color: 'white' }}>
+                        {item.icon}
+                      </div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        color: '#1a1a1a',
+                        marginBottom: '2px'
+                      }}>
+                        {item.title}
+                      </div>
+                      <div style={{
+                        fontSize: '14px',
+                        color: '#6b7280'
+                      }}>
+                        {item.subtitle}
+                      </div>
+                    </div>
+                    <IoChevronForward size={16} color="#9ca3af" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
 
-        {/* Main Content */}
-        <div style={{
-          flex: 1,
-          background: 'white',
-          borderRadius: '16px',
-          padding: '32px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          {activeSection === 'profile' && (
-            <div>
-              <h2 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '24px'
-              }}>
-                Profile Settings
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue={mockUser.name}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      background: 'white',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    defaultValue={mockUser.email}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      background: 'white',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    defaultValue={mockUser.phone}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      background: 'white',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue={mockUser.location}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      background: 'white',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <button style={{
-                  padding: '12px 24px',
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}>
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'security' && (
-            <div>
-              <h2 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '24px'
-              }}>
-                Security Settings
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Current Password
-                  </label>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter current password"
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        paddingRight: '48px',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        fontSize: '16px',
-                        background: 'white',
-                        outline: 'none'
-                      }}
-                    />
-                    <button
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{
-                        position: 'absolute',
-                        right: '16px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        background: 'none',
-                        border: 'none',
-                        color: '#9ca3af',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    New Password
-                  </label>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Enter new password"
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        paddingRight: '48px',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        fontSize: '16px',
-                        background: 'white',
-                        outline: 'none'
-                      }}
-                    />
-                    <button
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      style={{
-                        position: 'absolute',
-                        right: '16px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        background: 'none',
-                        border: 'none',
-                        color: '#9ca3af',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {showConfirmPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-                    </button>
-                  </div>
-                </div>
-
-                <button style={{
-                  padding: '12px 24px',
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}>
-                  Update Password
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'notifications' && (
-            <div>
-              <h2 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '24px'
-              }}>
-                Notification Settings
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                      Messages
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                      Receive notifications for new messages
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={notifications.messages}
-                    onChange={(e) => setNotifications({...notifications, messages: e.target.checked})}
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                </div>
-
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                      Bookings
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                      Notifications for booking updates
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={notifications.bookings}
-                    onChange={(e) => setNotifications({...notifications, bookings: e.target.checked})}
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                </div>
-
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                      Promotions
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                      Special offers and promotions
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={notifications.promotions}
-                    onChange={(e) => setNotifications({...notifications, promotions: e.target.checked})}
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                </div>
-
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                      App Updates
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                      New features and updates
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={notifications.updates}
-                    onChange={(e) => setNotifications({...notifications, updates: e.target.checked})}
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'appearance' && (
-            <div>
-              <h2 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '24px'
-              }}>
-                Appearance Settings
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Theme
-                  </label>
-                  <select
-                    defaultValue={mockUser.theme}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      background: 'white',
-                      outline: 'none'
-                    }}
-                  >
-                    <option value="Light">Light</option>
-                    <option value="Dark">Dark</option>
-                    <option value="Auto">Auto</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'language' && (
-            <div>
-              <h2 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '24px'
-              }}>
-                Language Settings
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    Language
-                  </label>
-                  <select
-                    defaultValue={mockUser.language}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      background: 'white',
-                      outline: 'none'
-                    }}
-                  >
-                    <option value="English">English</option>
-                    <option value="Spanish">Spanish</option>
-                    <option value="French">French</option>
-                    <option value="German">German</option>
-                    <option value="Chinese">Chinese</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'help' && (
-            <div>
-              <h2 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#1a1a1a',
-                marginBottom: '24px'
-              }}>
-                Help & Support
-              </h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
-                }}>
-                  <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                    FAQ
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Frequently asked questions
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
-                }}>
-                  <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                    Contact Support
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Get help from our support team
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
-                }}>
-                  <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                    Privacy Policy
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Read our privacy policy
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '16px',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
-                }}>
-                  <div style={{ fontSize: '16px', fontWeight: '500', color: '#1a1a1a' }}>
-                    Terms of Service
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Read our terms of service
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Danger Zone */}
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '16px'
-      }}>
-        <div style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '32px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          <h2 style={{
-            fontSize: '20px',
+        {/* Danger Zone */}
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{
+            fontSize: '16px',
             fontWeight: '600',
-            color: '#dc2626',
-            marginBottom: '24px'
+            color: '#374151',
+            margin: '0 0 12px 0',
+            paddingLeft: '4px'
           }}>
-            Danger Zone
-          </h2>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            Account Actions
+          </h3>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}>
             <button
               onClick={handleLogout}
               style={{
+                width: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
-                padding: '12px 24px',
+                gap: '16px',
+                padding: '16px 20px',
                 background: 'white',
-                color: '#dc2626',
-                border: '2px solid #dc2626',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                borderBottom: '1px solid #f3f4f6'
               }}
             >
-              <IoLogOutOutline size={20} />
-              Logout
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: '#f59e0b',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <IoLogOutOutline size={20} color="white" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  color: '#1a1a1a',
+                  marginBottom: '2px'
+                }}>
+                  Log Out
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  color: '#6b7280'
+                }}>
+                  Sign out of your account
+                </div>
+              </div>
+              <IoChevronForward size={16} color="#9ca3af" />
             </button>
-            
             <button
               onClick={handleDeleteAccount}
               style={{
+                width: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
-                padding: '12px 24px',
-                background: '#dc2626',
-                color: 'white',
+                gap: '16px',
+                padding: '16px 20px',
+                background: 'white',
                 border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                textAlign: 'left'
               }}
             >
-              <IoTrashOutline size={20} />
-              Delete Account
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: '#ef4444',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <IoTrashOutline size={20} color="white" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  color: '#1a1a1a',
+                  marginBottom: '2px'
+                }}>
+                  Delete Account
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  color: '#6b7280'
+                }}>
+                  Permanently delete your account
+                </div>
+              </div>
+              <IoChevronForward size={16} color="#9ca3af" />
             </button>
           </div>
+        </div>
+
+        {/* App Version */}
+        <div style={{
+          textAlign: 'center',
+          padding: '20px',
+          color: '#9ca3af',
+          fontSize: '14px'
+        }}>
+          Version 1.0.0
         </div>
       </div>
     </div>

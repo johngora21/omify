@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { IoPersonOutline, IoBookmarkOutline, IoSettingsOutline, IoCloseOutline, IoStarOutline, IoBriefcaseOutline } from 'react-icons/io5';
+import { IoPersonOutline, IoBookmarkOutline, IoSettingsOutline, IoCloseOutline, IoStarOutline, IoBriefcaseOutline, IoPlay } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
+import { BiSpa } from 'react-icons/bi';
 import type { User } from '../types';
 
 interface SidebarProps {
@@ -174,7 +175,9 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
               Premium
             </Link>
             
-            <Link to="/professional" onClick={onClose} style={{
+
+            
+            <Link to="/erotic-registration" onClick={onClose} style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
@@ -185,8 +188,23 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
               fontWeight: '500',
               transition: 'background-color 0.2s'
             }}>
-              <IoBriefcaseOutline size={20} />
-              Professional
+              <BiSpa size={20} />
+              Erotic
+            </Link>
+            
+            <Link to="/movies" onClick={onClose} style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '16px 20px',
+              textDecoration: 'none',
+              color: '#1a1a1a',
+              fontSize: '16px',
+              fontWeight: '500',
+              transition: 'background-color 0.2s'
+            }}>
+              <IoPlay size={20} />
+              Movies
             </Link>
             
             <Link to="/bookmarks" onClick={onClose} style={{
@@ -223,8 +241,7 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
 
         {/* Footer */}
         <div style={{
-          padding: '20px',
-          borderTop: '1px solid #e5e7eb'
+          padding: '20px'
         }}>
           {user ? (
             <div style={{
@@ -255,44 +272,7 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
                 Logout
               </button>
             </div>
-          ) : (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px'
-            }}>
-              <Link to="/login" onClick={onClose} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                textDecoration: 'none',
-                color: '#1a1a1a',
-                fontSize: '14px',
-                fontWeight: '500',
-                borderRadius: '8px',
-                transition: 'background-color 0.2s'
-              }}>
-                <IoPersonOutline size={18} />
-                Login
-              </Link>
-              <Link to="/register" onClick={onClose} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                textDecoration: 'none',
-                color: '#1a1a1a',
-                fontSize: '14px',
-                fontWeight: '500',
-                borderRadius: '8px',
-                transition: 'background-color 0.2s'
-              }}>
-                <IoPersonOutline size={18} />
-                Sign Up
-              </Link>
-            </div>
-          )}
+          ) : null}
         </div>
       </div>
     </>

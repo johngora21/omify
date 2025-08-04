@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoEllipsisVertical, IoHeartOutline, IoChatbubbleOutline, IoBookmarkOutline, IoPersonAddOutline, IoCheckmarkCircleOutline, IoTimeOutline, IoArrowBack } from 'react-icons/io5';
 
-const Notifications = () => {
+const Notifications = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
 
@@ -148,29 +148,47 @@ const Notifications = () => {
       <div style={{
         background: 'white',
         padding: '20px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        position: 'relative'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button
-            onClick={() => navigate(-1)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <IoArrowBack size={24} color="#262626" />
-          </button>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '700', color: '#1f2937' }}>Notifications</h1>
+        {/* Back Arrow */}
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '16px',
+            transform: 'translateY(-50%)',
+            background: 'rgba(0, 0, 0, 0.1)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10
+          }}
+        >
+          <IoArrowBack size={20} color="#1a1a1a" />
+        </button>
+        
+        {/* Title */}
+        <div style={{
+          textAlign: 'center',
+          fontSize: '20px',
+          fontWeight: '600',
+          color: '#1a1a1a'
+        }}>
+          Notifications
         </div>
+        
+        {/* Menu Button */}
         <button style={{
+          position: 'absolute',
+          top: '50%',
+          right: '16px',
+          transform: 'translateY(-50%)',
           background: 'none',
           border: 'none',
           cursor: 'pointer',

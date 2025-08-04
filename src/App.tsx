@@ -6,22 +6,28 @@ import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import Home from './pages/Home';
 import Erotic from './pages/Erotic';
+import EroticRegistration from './pages/EroticRegistration';
+import DatingRegistration from './pages/DatingRegistration';
+import MassageRegistration from './pages/MassageRegistration';
+import EscortRegistration from './pages/EscortRegistration';
+import Movies from './pages/Movies';
 import Reels from './pages/Reels';
 import Entertainment from './pages/Entertainment';
 import MovieDetails from './pages/MovieDetails';
-import Movies from './pages/Movies';
 import Sports from './pages/Sports';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ServiceProviderProfile from './pages/ServiceProviderProfile';
 import Profile from './pages/Profile';
 import Premium from './pages/Premium';
-import Professional from './pages/Professional';
+import Business from './pages/Professional';
 import Bookmarks from './pages/Bookmarks';
 import Settings from './pages/Settings';
 import CreatePost from './pages/CreatePost';
 import Messages from './pages/Messages';
 import Notifications from './pages/Notifications';
+import Saved from './pages/Saved';
+import EditProfile from './pages/EditProfile';
 
 function AppContent() {
   const [user, setUser] = useState<User | null>(null);
@@ -41,7 +47,14 @@ function AppContent() {
     '/settings',
     '/messages',
     '/notifications',
-    '/movie'
+    '/movie',
+    '/saved',
+    '/movies',
+    '/erotic-registration',
+    '/dating-registration',
+    '/massage-registration',
+    '/escort-registration',
+    '/edit-profile'
   ];
 
   // Pages where we only want to hide the top bar but keep bottom navigation
@@ -95,14 +108,21 @@ function AppContent() {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register setUser={setUser} />} />
           <Route path="/provider/:id" element={<ServiceProviderProfile />} />
-          <Route path="/profile" element={<Profile user={user} />} />
-          <Route path="/premium" element={<Premium />} />
-          <Route path="/professional" element={<Professional />} />
-          <Route path="/bookmarks" element={<Bookmarks />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile user={user} onMenuClick={toggleSidebar} />} />
+          <Route path="/edit-profile" element={<EditProfile onMenuClick={toggleSidebar} />} />
+          <Route path="/premium" element={<Premium onMenuClick={toggleSidebar} />} />
+                         <Route path="/professional" element={<Business onMenuClick={toggleSidebar} />} />
+          <Route path="/bookmarks" element={<Bookmarks onMenuClick={toggleSidebar} />} />
+          <Route path="/settings" element={<Settings onMenuClick={toggleSidebar} />} />
           <Route path="/create" element={<CreatePost />} />
           <Route path="/messages" element={<Messages />} />
-          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/notifications" element={<Notifications onMenuClick={toggleSidebar} />} />
+          <Route path="/saved" element={<Saved onMenuClick={toggleSidebar} />} />
+                 <Route path="/erotic-registration" element={<EroticRegistration onMenuClick={toggleSidebar} />} />
+       <Route path="/dating-registration" element={<DatingRegistration />} />
+       <Route path="/massage-registration" element={<MassageRegistration />} />
+       <Route path="/escort-registration" element={<EscortRegistration />} />
+       <Route path="/movies" element={<Movies onMenuClick={toggleSidebar} />} />
         </Routes>
       </main>
 

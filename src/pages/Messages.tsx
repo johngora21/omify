@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoSearchOutline, IoEllipsisVertical, IoVideocam, IoCall, IoEllipsisHorizontal, IoArrowBack, IoHeartOutline, IoImageOutline, IoMicOutline, IoArrowForward, IoHappyOutline, IoColorPalette } from 'react-icons/io5';
+import { IoSearchOutline, IoEllipsisVertical, IoVideocam, IoCall, IoEllipsisHorizontal, IoArrowBack, IoHeartOutline, IoImageOutline, IoMicOutline, IoArrowForward, IoHappyOutline, IoColorPalette, IoChatbubble } from 'react-icons/io5';
 import { BiSend } from 'react-icons/bi';
 
 const Messages = () => {
@@ -9,6 +9,16 @@ const Messages = () => {
   const [message, setMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('conversations');
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [aiMessages, setAiMessages] = useState([
+    {
+      id: 1,
+      text: "Hi! I'm your AI assistant. I can help you learn about all the features in our app. What would you like to know?",
+      sender: 'ai',
+      time: new Date().toLocaleTimeString()
+    }
+  ]);
+  const [aiInput, setAiInput] = useState('');
 
   const conversations = [
     {
@@ -79,6 +89,58 @@ const Messages = () => {
     }
   };
 
+  const handleAISendMessage = () => {
+    if (aiInput.trim()) {
+      const userMessage = {
+        id: aiMessages.length + 1,
+        text: aiInput,
+        sender: 'user',
+        time: new Date().toLocaleTimeString()
+      };
+      
+      setAiMessages(prev => [...prev, userMessage]);
+      setAiInput('');
+
+      // Simulate AI response
+      setTimeout(() => {
+        const aiResponse = generateAIResponse(aiInput);
+        const aiMessage = {
+          id: aiMessages.length + 2,
+          text: aiResponse,
+          sender: 'ai',
+          time: new Date().toLocaleTimeString()
+        };
+        setAiMessages(prev => [...prev, aiMessage]);
+      }, 1000);
+    }
+  };
+
+  const generateAIResponse = (userInput: string) => {
+    const input = userInput.toLowerCase();
+    
+    if (input.includes('movie') || input.includes('entertainment')) {
+      return "Our Entertainment section features movies, TV shows, and live sports! You can browse trending movies, watch trailers, and save your favorites. We also have a dedicated Movies page where you can see all your saved content.";
+    } else if (input.includes('dating') || input.includes('match')) {
+      return "Our dating features help you find meaningful connections! Browse profiles, send messages, and discover people with similar interests. You can also use our advanced matching algorithms to find your perfect match.";
+    } else if (input.includes('erotic') || input.includes('massage') || input.includes('escort')) {
+      return "We offer various adult services including massage therapy, dating services, and companionship. All providers are verified and professional. You can browse by category and read detailed profiles with reviews.";
+    } else if (input.includes('premium') || input.includes('subscription')) {
+      return "Premium plans unlock exclusive features like unlimited messaging, HD content, live sports, and priority support. Choose from Basic ($4.99), Premium ($9.99), or VIP ($19.99) plans with monthly or yearly billing.";
+    } else if (input.includes('profile') || input.includes('account')) {
+      return "Your profile is your digital identity! Add photos, update your bio, and manage your privacy settings. You can also view your activity, saved items, and account preferences in the Settings section.";
+    } else if (input.includes('message') || input.includes('chat')) {
+      return "Messaging is a core feature! You can chat with matches, service providers, and other users. We support text, images, and voice messages. Your conversations are private and secure.";
+    } else if (input.includes('notification') || input.includes('alert')) {
+      return "Stay updated with smart notifications! Get alerts for new messages, matches, booking confirmations, and app updates. You can customize notification preferences in Settings.";
+    } else if (input.includes('bookmark') || input.includes('save')) {
+      return "Save your favorites! Bookmark movies, profiles, and content you love. Access all your saved items in the Bookmarks section. It's your personal collection of things you want to revisit.";
+    } else if (input.includes('help') || input.includes('support')) {
+      return "Need help? Our support team is here for you! You can contact us through the Settings page, and we also offer in-app help guides. For urgent issues, premium users get priority support.";
+    } else {
+      return "I'm here to help you explore all our features! You can ask me about movies, dating, premium features, profiles, messaging, notifications, bookmarks, or general app support. What would you like to know more about?";
+    }
+  };
+
   const filteredConversations = conversations.filter(conv =>
     conv.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -101,42 +163,58 @@ const Messages = () => {
           <div style={{
             background: 'white',
             padding: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
+            position: 'relative'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <button 
-                onClick={() => navigate('/')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <IoArrowBack size={20} color="#262626" />
-              </button>
-              <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>Messages</h1>
-            </div>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button style={{
-                background: 'none',
+            {/* Back Arrow */}
+            <button 
+              onClick={() => navigate('/')}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '16px',
+                transform: 'translateY(-50%)',
+                background: 'rgba(0, 0, 0, 0.1)',
                 border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                borderRadius: '8px',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <IoEllipsisHorizontal size={20} color="#262626" />
-              </button>
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 10
+              }}
+            >
+              <IoArrowBack size={20} color="#1a1a1a" />
+            </button>
+            
+            {/* Title */}
+            <div style={{
+              textAlign: 'center',
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1a1a1a'
+            }}>
+              Messages
             </div>
+            
+            {/* Menu Button */}
+            <button style={{
+              position: 'absolute',
+              top: '50%',
+              right: '16px',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <IoEllipsisHorizontal size={20} color="#262626" />
+            </button>
           </div>
 
           {/* Search */}
@@ -729,6 +807,147 @@ const Messages = () => {
           </div>
         </div>
       )}
+
+                 {/* AI Chat Interface */}
+           {showAIChat && (
+             <div style={{
+               position: 'fixed',
+               top: 0,
+               left: 0,
+               width: '100vw',
+               height: '100vh',
+               background: 'white',
+               display: 'flex',
+               flexDirection: 'column',
+               zIndex: 1000
+             }}>
+                         {/* AI Chat Header */}
+               <div style={{
+                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                 color: 'white',
+                 padding: '16px',
+                 display: 'flex',
+                 alignItems: 'center',
+                 justifyContent: 'space-between'
+               }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <IoChatbubble size={20} />
+              <span style={{ fontWeight: '600' }}>AI Assistant</span>
+            </div>
+            <button
+              onClick={() => setShowAIChat(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '18px'
+              }}
+            >
+              ×
+            </button>
+          </div>
+
+          {/* AI Chat Messages */}
+          <div style={{
+            flex: 1,
+            padding: '16px',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px'
+          }}>
+            {aiMessages.map((msg) => (
+              <div
+                key={msg.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start'
+                }}
+              >
+                <div style={{
+                  maxWidth: '80%',
+                  padding: '8px 12px',
+                  borderRadius: '16px',
+                  background: msg.sender === 'user' ? '#0095f6' : '#f0f0f0',
+                  color: msg.sender === 'user' ? 'white' : '#333',
+                  fontSize: '14px',
+                  wordWrap: 'break-word'
+                }}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* AI Chat Input */}
+          <div style={{
+            padding: '16px',
+            borderTop: '1px solid #e5e7eb',
+            display: 'flex',
+            gap: '8px'
+          }}>
+            <input
+              type="text"
+              placeholder="Ask about app features..."
+              value={aiInput}
+              onChange={(e) => setAiInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAISendMessage()}
+              style={{
+                flex: 1,
+                border: '1px solid #dbdbdb',
+                borderRadius: '20px',
+                padding: '8px 12px',
+                fontSize: '14px',
+                outline: 'none'
+              }}
+            />
+            <button
+              onClick={handleAISendMessage}
+              disabled={!aiInput.trim()}
+              style={{
+                background: aiInput.trim() ? '#0095f6' : '#dbdbdb',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: aiInput.trim() ? 'pointer' : 'not-allowed'
+              }}
+            >
+              <BiSend size={14} color="white" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Floating AI Chat Button */}
+      <button
+        onClick={() => setShowAIChat(!showAIChat)}
+        style={{
+          position: 'fixed',
+          bottom: '100px',
+          right: '20px',
+          width: '56px',
+          height: '56px',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: 'none',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+          zIndex: 999,
+          transition: 'transform 0.2s ease'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      >
+        <IoChatbubble size={24} color="white" />
+      </button>
     </div>
   );
 };
