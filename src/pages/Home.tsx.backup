@@ -1,0 +1,281 @@
+import { useState } from 'react';
+import { IoHeart, IoHeartOutline, IoChatbubbleOutline, IoPaperPlaneOutline, IoBookmarkOutline, IoEllipsisHorizontal } from 'react-icons/io5';
+
+const Home = () => {
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+
+  const stories = [
+    { id: '1', username: 'sophia_escorts', avatar: 'https://via.placeholder.com/60x60', hasStory: true },
+    { id: '2', username: 'emma_massage', avatar: 'https://via.placeholder.com/60x60', hasStory: true },
+    { id: '3', username: 'luna_premium', avatar: 'https://via.placeholder.com/60x60', hasStory: true },
+    { id: '4', username: 'ava_luxury', avatar: 'https://via.placeholder.com/60x60', hasStory: true },
+    { id: '5', username: 'mia_therapy', avatar: 'https://via.placeholder.com/60x60', hasStory: true },
+  ];
+
+  const posts = [
+    {
+      id: '1',
+      username: 'sophia_escorts',
+      avatar: 'https://via.placeholder.com/32x32',
+      location: 'Downtown, City',
+      image: 'https://via.placeholder.com/600x600',
+      likes: 1250,
+      caption: 'Professional escort services available 💕 DM for bookings #escort #professional',
+      timeAgo: '2h',
+      isVideo: false
+    },
+    {
+      id: '2',
+      username: 'emma_massage',
+      avatar: 'https://via.placeholder.com/32x32',
+      location: 'Spa District',
+      image: 'https://via.placeholder.com/600x400',
+      likes: 892,
+      caption: 'Relaxing massage sessions available today 💆‍♀️ Book your session now #massage #relax',
+      timeAgo: '4h',
+      isVideo: true
+    },
+    {
+      id: '3',
+      username: 'luna_premium',
+      avatar: 'https://via.placeholder.com/32x32',
+      location: 'Uptown',
+      image: 'https://via.placeholder.com/600x600',
+      likes: 2100,
+      caption: 'Premium services for discerning clients ✨ Available for outcalls #luxury #premium',
+      timeAgo: '6h',
+      isVideo: false
+    },
+    {
+      id: '4',
+      username: 'ava_luxury',
+      avatar: 'https://via.placeholder.com/32x32',
+      location: 'Hotel District',
+      image: 'https://via.placeholder.com/600x800',
+      likes: 1567,
+      caption: 'Elegant companionship services 🌟 Verified and professional #companion #elegant',
+      timeAgo: '8h',
+      isVideo: true
+    }
+  ];
+
+  const toggleLike = (postId: string) => {
+    const newLikedPosts = new Set(likedPosts);
+    if (newLikedPosts.has(postId)) {
+      newLikedPosts.delete(postId);
+    } else {
+      newLikedPosts.add(postId);
+    }
+    setLikedPosts(newLikedPosts);
+  };
+
+  return (
+    <div style={{ 
+      maxWidth: '470px', 
+      margin: '0 auto', 
+      background: '#fafafa',
+      minHeight: '100vh'
+    }}>
+      {/* Stories Section */}
+      <div style={{
+        background: '#ffffff',
+        borderBottom: '1px solid #e5e5e5',
+        padding: '16px 0',
+        marginBottom: '0'
+      }}>
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          padding: '0 16px',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none'
+        }}>
+          {stories.map(story => (
+            <div key={story.id} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              minWidth: '60px',
+              cursor: 'pointer'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                background: story.hasStory ? 
+                  'linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)' : 
+                  '#e5e5e5',
+                padding: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <img 
+                  src={story.avatar} 
+                  alt={story.username}
+                  style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    border: '2px solid white',
+                    objectFit: 'cover'
+                  }}
+                />
+              </div>
+              <span style={{
+                fontSize: '12px',
+                color: '#000000',
+                marginTop: '4px',
+                textAlign: 'center',
+                maxWidth: '60px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
+                {story.username}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Posts Feed */}
+      <div>
+        {posts.map(post => (
+          <div key={post.id} style={{
+            background: '#ffffff',
+            borderBottom: '1px solid #e5e5e5',
+            marginBottom: '0'
+          }}>
+            {/* Post Header */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '12px 16px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img 
+                  src={post.avatar} 
+                  alt={post.username}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    objectFit: 'cover'
+                  }}
+                />
+                <div>
+                  <div style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#000000'
+                  }}>
+                    {post.username}
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#8e8e8e'
+                  }}>
+                    {post.location}
+                  </div>
+                </div>
+              </div>
+              <IoEllipsisHorizontal size={16} color="#000000" style={{ cursor: 'pointer' }} />
+            </div>
+
+            {/* Post Image/Video */}
+            <div style={{ position: 'relative' }}>
+              <img 
+                src={post.image} 
+                alt="Post content"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '600px',
+                  objectFit: 'cover',
+                  cursor: 'pointer'
+                }}
+              />
+              {post.isVideo && (
+                <div style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  background: 'rgba(0, 0, 0, 0.7)',
+                  color: 'white',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  fontSize: '12px'
+                }}>
+                  VIDEO
+                </div>
+              )}
+            </div>
+
+            {/* Post Actions */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '12px 16px 8px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <button 
+                  onClick={() => toggleLike(post.id)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '0'
+                  }}
+                >
+                  {likedPosts.has(post.id) ? 
+                    <IoHeart size={24} color="#ed4956" /> : 
+                    <IoHeartOutline size={24} color="#000000" />
+                  }
+                </button>
+                <IoChatbubbleOutline size={24} color="#000000" style={{ cursor: 'pointer' }} />
+                <IoPaperPlaneOutline size={24} color="#000000" style={{ cursor: 'pointer' }} />
+              </div>
+              <IoBookmarkOutline size={24} color="#000000" style={{ cursor: 'pointer' }} />
+            </div>
+
+            {/* Likes Count */}
+            <div style={{
+              padding: '0 16px 8px',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#000000'
+            }}>
+              {likedPosts.has(post.id) ? post.likes + 1 : post.likes} likes
+            </div>
+
+            {/* Caption */}
+            <div style={{
+              padding: '0 16px 12px',
+              fontSize: '14px',
+              color: '#000000',
+              lineHeight: '18px'
+            }}>
+              <span style={{ fontWeight: '600', marginRight: '8px' }}>{post.username}</span>
+              {post.caption}
+            </div>
+
+            {/* Time */}
+            <div style={{
+              padding: '0 16px 12px',
+              fontSize: '12px',
+              color: '#8e8e8e'
+            }}>
+              {post.timeAgo} ago
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
