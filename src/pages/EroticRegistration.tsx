@@ -72,7 +72,7 @@ const EroticRegistration = ({ onMenuClick }: { onMenuClick?: () => void }) => {
         position: 'relative'
       }}>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/professional')}
           style={{
             position: 'absolute',
             top: '0',
@@ -218,7 +218,7 @@ const EroticRegistration = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           <button
             onClick={handleRegistration}
             style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
               color: 'white',
               border: 'none',
               borderRadius: '12px',

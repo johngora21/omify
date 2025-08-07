@@ -13,6 +13,7 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
   const [activeTab, setActiveTab] = useState('posts');
   const [selectedPost, setSelectedPost] = useState(null);
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
+  const [serviceFilter, setServiceFilter] = useState('all');
 
   const mockPosts = [
     {
@@ -75,29 +76,61 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
       rating: 4.8,
       reviews: 24,
       image: 'https://images.unsplash.com/photo-1544161512-4f8b5d0c0c0c?w=400&h=300&fit=crop',
-      status: 'active'
+      status: 'active',
+      category: 'erotic',
+      type: 'Wellness'
     },
     {
       id: '2',
-      title: 'Deep Tissue Massage',
-      description: 'Therapeutic massage for chronic muscle tension and pain relief',
-      price: '$95/hour',
-      duration: '60 min',
+      title: 'Luxury Hotel Suite',
+      description: 'Premium accommodation with city views and amenities',
+      price: '$200/night',
+      duration: '24 hours',
       rating: 4.9,
       reviews: 18,
-      image: 'https://images.unsplash.com/photo-1544161512-4f8b5d0c0c0c?w=400&h=300&fit=crop',
-      status: 'active'
+      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
+      status: 'active',
+      category: 'accommodation',
+      type: 'Hotel'
     },
     {
       id: '3',
-      title: 'Hot Stone Massage',
-      description: 'Heated stones for ultimate relaxation and muscle therapy',
-      price: '$120/hour',
-      duration: '75 min',
+      title: 'Safari Adventure Tour',
+      description: '3-day wildlife safari in Serengeti National Park',
+      price: '$500/person',
+      duration: '3 days',
       rating: 4.7,
       reviews: 12,
+      image: 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=400&h=300&fit=crop',
+      status: 'active',
+      category: 'adventures',
+      type: 'Safari'
+    },
+    {
+      id: '4',
+      title: '4x4 SUV Rental',
+      description: 'Off-road capable vehicle for adventure trips',
+      price: '$120/day',
+      duration: '24 hours',
+      rating: 4.6,
+      reviews: 8,
+      image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop',
+      status: 'active',
+      category: 'cars',
+      type: 'SUV'
+    },
+    {
+      id: '5',
+      title: 'Deep Tissue Massage',
+      description: 'Therapeutic massage for chronic muscle tension',
+      price: '$95/hour',
+      duration: '60 min',
+      rating: 4.9,
+      reviews: 15,
       image: 'https://images.unsplash.com/photo-1544161512-4f8b5d0c0c0c?w=400&h=300&fit=crop',
-      status: 'active'
+      status: 'inactive',
+      category: 'erotic',
+      type: 'Wellness'
     }
   ];
 
@@ -348,17 +381,20 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
             >
               Edit Profile
             </button>
-            <button style={{
-              padding: '12px 24px',
-              background: 'white',
-              color: '#3b82f6',
-              border: '2px solid #3b82f6',
-              borderRadius: '20px',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
-              View Services
+            <button 
+              onClick={() => navigate('/professional')}
+              style={{
+                padding: '12px 24px',
+                background: 'white',
+                color: '#3b82f6',
+                border: '2px solid #3b82f6',
+                borderRadius: '20px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Professional
             </button>
           </div>
         </div>
@@ -406,22 +442,6 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
           >
             Services
           </button>
-
-          <button
-            onClick={() => setActiveTab('analytics')}
-            style={{
-              flex: 1,
-              padding: '16px',
-              background: activeTab === 'analytics' ? '#f3f4f6' : 'white',
-              border: 'none',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: activeTab === 'analytics' ? '#1a1a1a' : '#6b7280',
-              cursor: 'pointer'
-            }}
-          >
-            Analytics
-          </button>
         </div>
 
         {/* Tab Content */}
@@ -465,11 +485,34 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
 
           {activeTab === 'services' && (
             <div>
+              {/* Add New Service Button */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginBottom: '20px'
+              }}>
+                <button style={{
+                  padding: '12px 20px',
+                  background: '#10b981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}>
+                  + Add Service
+                </button>
+              </div>
+
+              {/* Services List */}
               {mockServices.map((service) => (
                 <div key={service.id} style={{
-                  borderBottom: '1px solid #e5e7eb',
-                  paddingBottom: '20px',
-                  marginBottom: '20px'
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  marginBottom: '16px',
+                  background: 'white'
                 }}>
                   <div style={{
                     display: 'flex',
@@ -493,29 +536,56 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
                         alignItems: 'flex-start',
                         marginBottom: '4px'
                       }}>
-                        <h3 style={{
-                          fontSize: '16px',
-                          fontWeight: '600',
-                          color: '#1a1a1a',
-                          margin: 0
-                        }}>
-                          {service.title}
-                        </h3>
-                        <span style={{
-                          padding: '2px 8px',
-                          borderRadius: '12px',
-                          fontSize: '12px',
-                          fontWeight: '600',
-                          background: service.status === 'active' ? '#dcfce7' : '#fef3c7',
-                          color: service.status === 'active' ? '#166534' : '#92400e'
-                        }}>
-                          {service.status}
-                        </span>
+                        <div>
+                          <h3 style={{
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            color: '#1a1a1a',
+                            margin: '0 0 4px 0'
+                          }}>
+                            {service.title}
+                          </h3>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            marginBottom: '4px'
+                          }}>
+                            <span style={{
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              background: service.status === 'active' ? '#dcfce7' : '#fef3c7',
+                              color: service.status === 'active' ? '#166534' : '#92400e'
+                            }}>
+                              {service.status}
+                            </span>
+                            <span style={{
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              background: '#e0e7ff',
+                              color: '#3730a3'
+                            }}>
+                              {service.type}
+                            </span>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '18px', fontWeight: '700', color: '#10b981' }}>
+                            {service.price}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                            {service.duration}
+                          </div>
+                        </div>
                       </div>
                       <p style={{
                         fontSize: '14px',
                         color: '#6b7280',
-                        margin: '4px 0',
+                        margin: '8px 0',
                         lineHeight: '1.4'
                       }}>
                         {service.description}
@@ -527,21 +597,22 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
                         fontSize: '14px',
                         color: '#6b7280'
                       }}>
-                        <span style={{ fontWeight: '600', color: '#1a1a1a' }}>
-                          {service.price}
-                        </span>
-                        <span>{service.duration}</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <span style={{ color: '#f59e0b' }}>★</span>
                           <span>{service.rating}</span>
                           <span>({service.reviews})</span>
                         </div>
+                        <span>•</span>
+                        <span style={{ textTransform: 'capitalize' }}>
+                          {service.category}
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div style={{
                     display: 'flex',
-                    gap: '12px'
+                    gap: '12px',
+                    flexWrap: 'wrap'
                   }}>
                     <button style={{
                       padding: '8px 16px',
@@ -553,7 +624,7 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
                       fontWeight: '500',
                       cursor: 'pointer'
                     }}>
-                      Edit
+                      Edit Service
                     </button>
                     <button style={{
                       padding: '8px 16px',
@@ -567,150 +638,21 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
                     }}>
                       View Bookings
                     </button>
+                    <button style={{
+                      padding: '8px 16px',
+                      background: 'white',
+                      color: service.status === 'active' ? '#dc2626' : '#10b981',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}>
+                      {service.status === 'active' ? 'Deactivate' : 'Activate'}
+                    </button>
                   </div>
                 </div>
               ))}
-            </div>
-          )}
-
-
-
-          {activeTab === 'analytics' && (
-            <div>
-              {/* Overview Stats */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '16px',
-                marginBottom: '24px'
-              }}>
-                <div style={{
-                  background: '#f8f9fa',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  textAlign: 'center'
-                }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#10b981', marginBottom: '4px' }}>
-                    ${mockAnalytics.totalEarnings}
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Total Earnings
-                  </div>
-                </div>
-                <div style={{
-                  background: '#f8f9fa',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  textAlign: 'center'
-                }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#3b82f6', marginBottom: '4px' }}>
-                    {mockAnalytics.totalBookings}
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Total Bookings
-                  </div>
-                </div>
-                <div style={{
-                  background: '#f8f9fa',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  textAlign: 'center'
-                }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#f59e0b', marginBottom: '4px' }}>
-                    {mockAnalytics.averageRating}
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Average Rating
-                  </div>
-                </div>
-                <div style={{
-                  background: '#f8f9fa',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  textAlign: 'center'
-                }}>
-                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#8b5cf6', marginBottom: '4px' }}>
-                    {mockAnalytics.totalReviews}
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Total Reviews
-                  </div>
-                </div>
-              </div>
-
-              {/* Monthly Earnings Chart */}
-              <div style={{
-                background: 'white',
-                padding: '20px',
-                borderRadius: '12px',
-                marginBottom: '20px',
-                border: '1px solid #e5e7eb'
-              }}>
-                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>
-                  Monthly Earnings
-                </h3>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'end',
-                  gap: '8px',
-                  height: '120px'
-                }}>
-                  {mockAnalytics.monthlyStats.map((stat, index) => (
-                    <div key={index} style={{ flex: 1, textAlign: 'center' }}>
-                      <div style={{
-                        background: '#3b82f6',
-                        height: `${(stat.earnings / 2000) * 100}px`,
-                        borderRadius: '4px 4px 0 0',
-                        marginBottom: '8px'
-                      }}></div>
-                      <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                        {stat.month}
-                      </div>
-                      <div style={{ fontSize: '10px', color: '#9ca3af' }}>
-                        ${stat.earnings}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Top Services */}
-              <div style={{
-                background: 'white',
-                padding: '20px',
-                borderRadius: '12px',
-                border: '1px solid #e5e7eb'
-              }}>
-                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>
-                  Top Performing Services
-                </h3>
-                {mockAnalytics.topServices.map((service, index) => (
-                  <div key={index} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    borderBottom: index < mockAnalytics.topServices.length - 1 ? '1px solid #e5e7eb' : 'none'
-                  }}>
-                    <div>
-                      <div style={{ fontWeight: '600', color: '#1a1a1a' }}>
-                        {service.name}
-                      </div>
-                      <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                        {service.bookings} bookings
-                      </div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: '600', color: '#10b981' }}>
-                        ${service.revenue}
-                      </div>
-                      <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                        Revenue
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
         </div>

@@ -28,6 +28,10 @@ import Messages from './pages/Messages';
 import Notifications from './pages/Notifications';
 import Saved from './pages/Saved';
 import EditProfile from './pages/EditProfile';
+import Explore from './pages/Explore';
+import AccommodationRegistration from './pages/AccommodationRegistration';
+import AdventureRegistration from './pages/AdventureRegistration';
+import CarRentalRegistration from './pages/CarRentalRegistration';
 
 function AppContent() {
   const [user, setUser] = useState<User | null>(null);
@@ -50,10 +54,14 @@ function AppContent() {
     '/movie',
     '/saved',
     '/movies',
+    '/explore',
     '/erotic-registration',
     '/dating-registration',
     '/massage-registration',
     '/escort-registration',
+    '/accommodation-registration',
+    '/adventure-registration',
+    '/car-rental-registration',
     '/edit-profile'
   ];
 
@@ -118,10 +126,14 @@ function AppContent() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/notifications" element={<Notifications onMenuClick={toggleSidebar} />} />
           <Route path="/saved" element={<Saved onMenuClick={toggleSidebar} />} />
+          <Route path="/explore" element={<Explore />} />
                  <Route path="/erotic-registration" element={<EroticRegistration onMenuClick={toggleSidebar} />} />
        <Route path="/dating-registration" element={<DatingRegistration />} />
        <Route path="/massage-registration" element={<MassageRegistration />} />
        <Route path="/escort-registration" element={<EscortRegistration />} />
+       <Route path="/accommodation-registration" element={<AccommodationRegistration onMenuClick={toggleSidebar} />} />
+       <Route path="/adventure-registration" element={<AdventureRegistration onMenuClick={toggleSidebar} />} />
+       <Route path="/car-rental-registration" element={<CarRentalRegistration onMenuClick={toggleSidebar} />} />
        <Route path="/movies" element={<Movies onMenuClick={toggleSidebar} />} />
         </Routes>
       </main>

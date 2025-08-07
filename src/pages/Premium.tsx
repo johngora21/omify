@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoStar, IoCheckmarkCircle, IoDiamond, IoRocket, IoArrowBack, IoPlayCircle, IoHeart, IoDownload, IoEye, IoShieldCheckmark, IoPerson, IoChatbubbles, IoVideocam, IoLocation } from 'react-icons/io5';
-import { FaCrown, FaRegHeart, FaRegBookmark } from 'react-icons/fa';
-import { MdSportsSoccer, MdMovie, MdLiveTv, MdVerified, MdFavorite } from 'react-icons/md';
+import { IoStar, IoCheckmarkCircle, IoDiamond, IoRocket, IoArrowBack, IoPlayCircle, IoHeart, IoDownload, IoEye, IoShieldCheckmark, IoPerson, IoChatbubbles, IoVideocam, IoLocation, IoBed, IoCar, IoBriefcaseOutline, IoBookmarkOutline, IoNotifications } from 'react-icons/io5';
+import { FaCrown, FaRegHeart, FaRegBookmark, FaUsers, FaMapMarkedAlt, FaHotel, FaCar, FaMountain } from 'react-icons/fa';
+import { MdSportsSoccer, MdMovie, MdLiveTv, MdVerified, MdFavorite, MdBusiness, MdExplore, MdTravelExplore } from 'react-icons/md';
 
 const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const navigate = useNavigate();
@@ -15,12 +15,13 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
       price: selectedPlan === 'monthly' ? 4.99 : 49.99,
       period: selectedPlan === 'monthly' ? 'month' : 'year',
       features: [
-        'Unlimited movie streaming',
-        'HD quality content',
-        'Ad-free experience',
+        'Unlimited social networking',
         'Basic dating features',
         'Standard messaging',
-        'Download 5 movies/month'
+        'Entertainment content',
+        'Basic professional features',
+        'Limited travel bookings',
+        'Standard support'
       ],
       popular: false,
       icon: <IoStar size={24} color="#6b7280" />
@@ -32,14 +33,15 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
       period: selectedPlan === 'monthly' ? 'month' : 'year',
       features: [
         'Everything in Basic',
-        '4K Ultra HD streaming',
-        'Live sports coverage',
-        'Unlimited downloads',
         'Advanced dating features',
         'Priority messaging',
         'Verified badge',
+        'Professional dashboard',
+        'Unlimited travel bookings',
+        'Premium entertainment',
+        'Advanced filters',
         'Multiple devices (4)',
-        'Exclusive content'
+        'Priority support'
       ],
       popular: true,
       icon: <IoDiamond size={24} color="#f59e0b" />
@@ -52,13 +54,14 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
       features: [
         'Everything in Premium',
         'VIP early access',
-        'Exclusive movie premieres',
+        'Exclusive content',
         'Personalized recommendations',
         'Unlimited devices',
-        'Premium sports packages',
         'VIP dating features',
+        'Premium travel services',
         'Concierge support',
-        'Priority customer support'
+        'Priority customer support',
+        'Exclusive events access'
       ],
       popular: false,
       icon: <FaCrown size={24} color="#8b5cf6" />
@@ -67,24 +70,75 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
 
   const appFeatures = [
     {
-      icon: <MdMovie size={32} color="#3b82f6" />,
-      title: 'Entertainment',
-      description: 'Unlimited movies, TV shows, live sports, and exclusive content'
-    },
-    {
       icon: <MdFavorite size={32} color="#ec4899" />,
-      title: 'Dating & Social',
-      description: 'Advanced matching, unlimited messaging, and social networking features'
+      title: 'Social & Dating',
+      description: 'Advanced matching, unlimited messaging, stories, reels, and social networking'
     },
     {
-      icon: <IoVideocam size={32} color="#10b981" />,
-      title: 'Live Content',
-      description: 'Live streaming, video calls, and real-time entertainment'
+      icon: <MdBusiness size={32} color="#3b82f6" />,
+      title: 'Professional Services',
+      description: 'Professional creator accounts, wellness, massage, escort services, and business tools'
     },
     {
-      icon: <IoLocation size={32} color="#f59e0b" />,
-      title: 'Location Services',
-      description: 'Find nearby people, events, and entertainment venues'
+      icon: <MdMovie size={32} color="#10b981" />,
+      title: 'Entertainment',
+      description: 'Movies, TV shows, live sports, music, and exclusive entertainment content'
+    },
+    {
+      icon: <MdTravelExplore size={32} color="#f59e0b" />,
+      title: 'Travel & Explore',
+      description: 'Hotels, car rentals, adventures, safaris, and travel booking services'
+    }
+  ];
+
+  const categoryFeatures = [
+    {
+      title: 'Social Features',
+      features: [
+        'Unlimited stories and reels',
+        'Advanced matching algorithms',
+        'Priority messaging',
+        'Verified badges',
+        'Social networking tools',
+        'Live streaming capabilities'
+      ],
+      icon: <FaUsers size={24} color="#ec4899" />
+    },
+    {
+      title: 'Professional Services',
+      features: [
+        'Professional creator accounts',
+        'Wellness & massage services',
+        'Escort service listings',
+        'Business analytics dashboard',
+        'Service provider profiles',
+        'Booking management tools'
+      ],
+      icon: <MdBusiness size={24} color="#3b82f6" />
+    },
+    {
+      title: 'Entertainment',
+      features: [
+        'Unlimited movie streaming',
+        'Live sports coverage',
+        'TV shows and series',
+        'Music and podcasts',
+        'Exclusive content access',
+        'Offline downloads'
+      ],
+      icon: <MdMovie size={24} color="#10b981" />
+    },
+    {
+      title: 'Travel & Explore',
+      features: [
+        'Hotel & BnB bookings',
+        'Car rental services',
+        'Adventure & safari tours',
+        'Travel planning tools',
+        'Location-based services',
+        'Travel insurance options'
+      ],
+      icon: <MdTravelExplore size={24} color="#f59e0b" />
     }
   ];
 
@@ -150,7 +204,7 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           marginLeft: 'auto',
           marginRight: 'auto'
         }}>
-          Unlock unlimited entertainment, dating features, and social networking capabilities
+          Unlock unlimited social networking, professional services, entertainment, and travel features
         </p>
       </div>
 
@@ -205,6 +259,75 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
               }}>
                 {feature.description}
               </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Category Features */}
+      <div style={{
+        background: 'white',
+        borderRadius: '20px',
+        padding: '32px',
+        marginBottom: '24px',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
+      }}>
+        <h2 style={{
+          fontSize: '24px',
+          fontWeight: '700',
+          color: '#1a1a1a',
+          textAlign: 'center',
+          marginBottom: '32px'
+        }}>
+          What You'll Get Access To
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '24px'
+        }}>
+          {categoryFeatures.map((category, index) => (
+            <div key={index} style={{
+              border: '1px solid #e5e7eb',
+              borderRadius: '16px',
+              padding: '24px',
+              background: 'linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%)'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginBottom: '16px'
+              }}>
+                {category.icon}
+                <h3 style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#1a1a1a',
+                  margin: 0
+                }}>
+                  {category.title}
+                </h3>
+              </div>
+              <ul style={{
+                listStyle: 'none',
+                padding: 0,
+                margin: 0
+              }}>
+                {category.features.map((feature, featureIndex) => (
+                  <li key={featureIndex} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginBottom: '8px',
+                    fontSize: '14px',
+                    color: '#6b7280'
+                  }}>
+                    <IoCheckmarkCircle size={16} color="#10b981" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
@@ -401,7 +524,7 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           textAlign: 'center',
           marginBottom: '32px'
         }}>
-          What You'll Get
+          Premium Benefits
         </h2>
         
         <div style={{
@@ -409,36 +532,6 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
           gap: '24px'
         }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px'
-            }}>
-              <IoPlayCircle size={24} color="white" />
-            </div>
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: '600',
-              color: '#1a1a1a',
-              marginBottom: '8px'
-            }}>
-              Unlimited Entertainment
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#6b7280',
-              lineHeight: '1.5'
-            }}>
-              Watch unlimited movies, TV shows, and live sports without restrictions
-            </p>
-          </div>
-
           <div style={{ textAlign: 'center' }}>
             <div style={{
               width: '64px',
@@ -458,14 +551,14 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              Advanced Dating
+              Enhanced Social Features
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               lineHeight: '1.5'
             }}>
-              Enhanced matching, unlimited messaging, and premium dating features
+              Unlimited messaging, advanced matching, verified badges, and priority support
             </p>
           </div>
 
@@ -473,14 +566,14 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
             <div style={{
               width: '64px',
               height: '64px',
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 16px'
             }}>
-              <IoDownload size={24} color="white" />
+              <MdBusiness size={24} color="white" />
             </div>
             <h3 style={{
               fontSize: '18px',
@@ -488,14 +581,44 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              Offline Access
+              Professional Tools
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               lineHeight: '1.5'
             }}>
-              Download content to watch offline and access premium features anywhere
+              Professional dashboards, analytics, service management, and business tools
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <MdTravelExplore size={24} color="white" />
+            </div>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#1a1a1a',
+              marginBottom: '8px'
+            }}>
+              Travel & Explore
+            </h3>
+            <p style={{
+              fontSize: '14px',
+              color: '#6b7280',
+              lineHeight: '1.5'
+            }}>
+              Unlimited travel bookings, premium filters, and exclusive travel services
             </p>
           </div>
         </div>
@@ -537,14 +660,14 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              Can I cancel my subscription anytime?
+              What features are included in Premium?
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               margin: 0
             }}>
-              Yes, you can cancel your subscription at any time. Your premium features will remain active until the end of your billing period.
+              Premium includes unlimited social features, professional tools, entertainment content, travel bookings, advanced filters, verified badges, and priority support across all categories.
             </p>
           </div>
 
@@ -559,14 +682,14 @@ const Premium = ({ onMenuClick }: { onMenuClick?: () => void }) => {
               color: '#1a1a1a',
               marginBottom: '8px'
             }}>
-              What dating features are included in Premium?
+              Can I access all categories with Premium?
             </h3>
             <p style={{
               fontSize: '14px',
               color: '#6b7280',
               margin: 0
             }}>
-              Premium includes unlimited messaging, advanced matching algorithms, verified badges, priority support, and exclusive dating features.
+              Yes, Premium gives you full access to all categories including social networking, professional services, entertainment, and travel features with enhanced capabilities.
             </p>
           </div>
 

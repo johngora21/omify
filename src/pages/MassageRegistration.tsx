@@ -69,7 +69,7 @@ const MassageRegistration = () => {
         position: 'relative'
       }}>
         <button
-          onClick={() => navigate('/erotic-registration')}
+          onClick={() => navigate('/professional')}
           style={{
             background: 'rgba(0, 0, 0, 0.1)',
             border: 'none',
@@ -660,7 +660,7 @@ const MassageRegistration = () => {
           type="submit"
           style={{
             width: '100%',
-            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
             color: 'white',
             border: 'none',
             borderRadius: '12px',

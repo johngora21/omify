@@ -5,7 +5,7 @@ import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 
 const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('providers');
+  const [activeTab, setActiveTab] = useState('bookmarks');
   const [likedProviders, setLikedProviders] = useState(new Set(['1', '3']));
   const [savedProviders, setSavedProviders] = useState(new Set(['2', '4']));
 
@@ -96,6 +96,42 @@ const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
     }
   ];
 
+  const bookings = [
+    {
+      id: '1',
+      providerName: 'Emma Thompson',
+      providerAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      service: 'Swedish Massage',
+      bookingDate: '2024-01-15',
+      bookingTime: '14:00',
+      status: 'confirmed',
+      price: '$120',
+      location: 'Downtown Spa'
+    },
+    {
+      id: '2',
+      providerName: 'Mia Rodriguez',
+      providerAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+      service: 'Escort Services',
+      bookingDate: '2024-01-20',
+      bookingTime: '20:00',
+      status: 'pending',
+      price: '$300',
+      location: 'Luxury Escorts'
+    },
+    {
+      id: '3',
+      providerName: 'Sophia Chen',
+      providerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
+      service: 'Thai Massage',
+      bookingDate: '2024-01-18',
+      bookingTime: '16:30',
+      status: 'completed',
+      price: '$150',
+      location: 'Asian Massage'
+    }
+  ];
+
   const toggleLike = (providerId: string) => {
     const newLiked = new Set(likedProviders);
     if (newLiked.has(providerId)) {
@@ -130,17 +166,12 @@ const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
       <div style={{
         background: 'white',
         padding: '20px 16px',
-        borderBottom: '1px solid #e5e7eb',
-        position: 'relative'
+        borderBottom: '1px solid #e5e7eb'
       }}>
         {/* Back Arrow */}
         <button
           onClick={() => navigate('/')}
           style={{
-            position: 'absolute',
-            top: '50%',
-            left: '16px',
-            transform: 'translateY(-50%)',
             background: 'rgba(0, 0, 0, 0.1)',
             border: 'none',
             borderRadius: '50%',
@@ -150,20 +181,64 @@ const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            zIndex: 10
+            marginBottom: '16px'
           }}
         >
           <IoArrowBack size={20} color="#1a1a1a" />
         </button>
-        
-        {/* Title */}
+
+        {/* Tabs */}
         <div style={{
-          textAlign: 'center',
-          fontSize: '20px',
-          fontWeight: '600',
-          color: '#1a1a1a'
+          display: 'flex',
+          backgroundColor: '#f3f4f6',
+          borderRadius: '12px',
+          padding: '4px',
+          margin: '0 20px'
         }}>
-          Bookmarks
+          <button
+            onClick={() => setActiveTab('bookmarks')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              borderRadius: '8px',
+              border: 'none',
+              background: activeTab === 'bookmarks' ? 'white' : 'transparent',
+              color: activeTab === 'bookmarks' ? '#1a1a1a' : '#6b7280',
+              fontWeight: activeTab === 'bookmarks' ? '600' : '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: activeTab === 'bookmarks' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
+            }}
+          >
+            <IoBookmarkOutline size={16} style={{ 
+              marginRight: '8px', 
+              verticalAlign: 'middle',
+              color: activeTab === 'bookmarks' ? '#3b82f6' : '#6b7280'
+            }} />
+            Saved
+          </button>
+          <button
+            onClick={() => setActiveTab('bookings')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              borderRadius: '8px',
+              border: 'none',
+              background: activeTab === 'bookings' ? 'white' : 'transparent',
+              color: activeTab === 'bookings' ? '#1a1a1a' : '#6b7280',
+              fontWeight: activeTab === 'bookings' ? '600' : '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: activeTab === 'bookings' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
+            }}
+          >
+            <IoHeart size={16} style={{ 
+              marginRight: '8px', 
+              verticalAlign: 'middle',
+              color: activeTab === 'bookings' ? '#3b82f6' : '#6b7280'
+            }} />
+            Bookings
+          </button>
         </div>
       </div>
 
@@ -171,7 +246,7 @@ const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
 
       {/* Content */}
       <div style={{ padding: '16px' }}>
-        {activeTab === 'providers' && (
+        {activeTab === 'bookmarks' && (
           <div>
             {bookmarkedProviders.length > 0 ? (
               <div style={{
@@ -376,28 +451,212 @@ const Bookmarks = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           </div>
         )}
 
-        {activeTab === 'posts' && (
-          <div style={{
-            textAlign: 'center',
-            padding: '60px 20px',
-            background: 'white',
-            borderRadius: '16px',
-            margin: '16px'
-          }}>
-            <FaRegHeart size={48} color="#9ca3af" style={{ marginBottom: '16px' }} />
-            <h3 style={{
-              fontSize: '18px',
-              color: '#6b7280',
-              marginBottom: '8px'
-            }}>
-              No liked posts yet
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#9ca3af'
-            }}>
-              Posts you like will appear here
-            </p>
+        {activeTab === 'bookings' && (
+          <div>
+            {bookings.length > 0 ? (
+              <div style={{
+                display: 'grid',
+                gap: '16px',
+                maxWidth: '600px',
+                margin: '0 auto'
+              }}>
+                {bookings.map((booking) => (
+                  <div key={booking.id} style={{
+                    background: 'white',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
+                    {/* Booking Header */}
+                    <div style={{ 
+                      padding: '20px 20px 16px',
+                      background: 'white',
+                      borderBottom: '1px solid #e5e7eb'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            overflow: 'hidden',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            border: '2px solid #e5e7eb'
+                          }}>
+                            <img
+                              src={booking.providerAvatar}
+                              alt={booking.providerName}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover'
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{
+                              fontSize: '16px',
+                              fontWeight: '600',
+                              color: '#1a1a1a',
+                              marginBottom: '4px'
+                            }}>
+                              {booking.providerName}
+                            </div>
+                            <div style={{
+                              fontSize: '14px',
+                              color: '#6b7280'
+                            }}>
+                              {booking.service}
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{
+                          textAlign: 'right'
+                        }}>
+                          <div style={{
+                            fontSize: '18px',
+                            fontWeight: '700',
+                            color: '#3b82f6',
+                            marginBottom: '4px'
+                          }}>
+                            {booking.price}
+                          </div>
+                          <div style={{
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            ...(booking.status === 'confirmed' ? {
+                              background: '#dcfce7',
+                              color: '#166534'
+                            } : booking.status === 'pending' ? {
+                              background: '#fef3c7',
+                              color: '#92400e'
+                            } : {
+                              background: '#dbeafe',
+                              color: '#1e40af'
+                            })
+                          }}>
+                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Booking Details */}
+                    <div style={{ padding: '16px 20px' }}>
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '12px',
+                        marginBottom: '16px'
+                      }}>
+                        <div>
+                          <div style={{
+                            fontSize: '12px',
+                            color: '#6b7280',
+                            marginBottom: '4px'
+                          }}>
+                            Date
+                          </div>
+                          <div style={{
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            color: '#1a1a1a'
+                          }}>
+                            {new Date(booking.bookingDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div>
+                          <div style={{
+                            fontSize: '12px',
+                            color: '#6b7280',
+                            marginBottom: '4px'
+                          }}>
+                            Time
+                          </div>
+                          <div style={{
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            color: '#1a1a1a'
+                          }}>
+                            {booking.bookingTime}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '14px',
+                        color: '#6b7280',
+                        marginBottom: '16px'
+                      }}>
+                        <IoLocationOutline size={16} />
+                        {booking.location}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div style={{
+                        display: 'flex',
+                        gap: '8px'
+                      }}>
+                        <button style={{
+                          flex: 1,
+                          padding: '12px',
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}>
+                          Message
+                        </button>
+                        <button style={{
+                          flex: 1,
+                          padding: '12px',
+                          background: 'white',
+                          color: '#6b7280',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}>
+                          Reschedule
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                textAlign: 'center',
+                padding: '60px 20px',
+                background: 'white',
+                borderRadius: '16px',
+                margin: '16px'
+              }}>
+                <IoHeart size={48} color="#9ca3af" style={{ marginBottom: '16px' }} />
+                <h3 style={{
+                  fontSize: '18px',
+                  color: '#6b7280',
+                  marginBottom: '8px'
+                }}>
+                  No bookings yet
+                </h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#9ca3af'
+                }}>
+                  Your bookings will appear here
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

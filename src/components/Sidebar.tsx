@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { IoPersonOutline, IoBookmarkOutline, IoSettingsOutline, IoCloseOutline, IoStarOutline, IoBriefcaseOutline, IoPlay } from 'react-icons/io5';
+import { IoPersonOutline, IoBookmarkOutline, IoSettingsOutline, IoCloseOutline, IoStarOutline, IoBriefcaseOutline, IoPlay, IoMap, IoGlobe } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
-import { BiSpa } from 'react-icons/bi';
 import type { User } from '../types';
 
 interface SidebarProps {
@@ -160,7 +159,7 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
               Profile
             </Link>
             
-            <Link to="/premium" onClick={onClose} style={{
+            <Link to="/explore" onClick={onClose} style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
@@ -171,25 +170,8 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
               fontWeight: '500',
               transition: 'background-color 0.2s'
             }}>
-              <IoStarOutline size={20} />
-              Premium
-            </Link>
-            
-
-            
-            <Link to="/erotic-registration" onClick={onClose} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '16px 20px',
-              textDecoration: 'none',
-              color: '#1a1a1a',
-              fontSize: '16px',
-              fontWeight: '500',
-              transition: 'background-color 0.2s'
-            }}>
-              <BiSpa size={20} />
-              Erotic
+              <IoGlobe size={20} />
+              Explore
             </Link>
             
             <Link to="/movies" onClick={onClose} style={{
@@ -220,6 +202,21 @@ const Sidebar = ({ isOpen, onClose, user, setUser }: SidebarProps) => {
             }}>
               <IoBookmarkOutline size={20} />
               Bookmarks
+            </Link>
+            
+            <Link to="/premium" onClick={onClose} style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '16px 20px',
+              textDecoration: 'none',
+              color: '#1a1a1a',
+              fontSize: '16px',
+              fontWeight: '500',
+              transition: 'background-color 0.2s'
+            }}>
+              <IoStarOutline size={20} />
+              Premium
             </Link>
             
             <Link to="/settings" onClick={onClose} style={{
