@@ -66,6 +66,65 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
     }
   ];
 
+  const mockBookings = [
+    {
+      id: '1',
+      customerName: 'Sarah Johnson',
+      customerAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      serviceTitle: 'Swedish Massage',
+      serviceImage: 'https://images.unsplash.com/photo-1544161512-4f8b5d0c0c0c?w=400&h=300&fit=crop',
+      date: '2024-01-15',
+      time: '14:00',
+      status: 'pending',
+      price: '$80',
+      customerPhone: '+255 123 456 789',
+      customerEmail: 'sarah.johnson@email.com',
+      notes: 'Customer prefers gentle pressure'
+    },
+    {
+      id: '2',
+      customerName: 'Michael Chen',
+      customerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      serviceTitle: 'Luxury Hotel Suite',
+      serviceImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
+      date: '2024-01-18',
+      time: '15:00',
+      status: 'confirmed',
+      price: '$200',
+      customerPhone: '+255 987 654 321',
+      customerEmail: 'michael.chen@email.com',
+      notes: 'Early check-in requested'
+    },
+    {
+      id: '3',
+      customerName: 'Emma Davis',
+      customerAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+      serviceTitle: 'Safari Adventure Tour',
+      serviceImage: 'https://images.unsplash.com/photo-1544161512-4f8b5d0c0c0c?w=400&h=300&fit=crop',
+      date: '2024-01-20',
+      time: '08:00',
+      status: 'completed',
+      price: '$500',
+      customerPhone: '+255 555 123 456',
+      customerEmail: 'emma.davis@email.com',
+      notes: 'Vegetarian meal preference'
+    },
+    {
+      id: '4',
+      customerName: 'David Wilson',
+      customerAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      serviceTitle: 'Car Rental - Toyota Land Cruiser',
+      serviceImage: 'https://images.unsplash.com/photo-1544161512-4f8b5d0c0c0c?w=400&h=300&fit=crop',
+      date: '2024-01-22',
+      time: '10:00',
+      status: 'pending',
+      price: '$150',
+      customerPhone: '+255 777 888 999',
+      customerEmail: 'david.wilson@email.com',
+      notes: 'International driving license provided'
+    }
+  ];
+
   const mockServices = [
     {
       id: '1',
@@ -442,6 +501,21 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
           >
             Services
           </button>
+          <button
+            onClick={() => setActiveTab('bookings')}
+            style={{
+              flex: 1,
+              padding: '16px',
+              background: activeTab === 'bookings' ? '#f3f4f6' : 'white',
+              border: 'none',
+              fontSize: '16px',
+              fontWeight: '600',
+              color: activeTab === 'bookings' ? '#1a1a1a' : '#6b7280',
+              cursor: 'pointer'
+            }}
+          >
+            Bookings
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -649,6 +723,244 @@ const Profile = ({ user, onMenuClick }: ProfileProps & { onMenuClick?: () => voi
                       cursor: 'pointer'
                     }}>
                       {service.status === 'active' ? 'Deactivate' : 'Activate'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'bookings' && (
+            <div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '20px'
+              }}>
+                <h3 style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#1a1a1a',
+                  margin: 0
+                }}>
+                  Recent Bookings
+                </h3>
+                <div style={{
+                  display: 'flex',
+                  gap: '8px'
+                }}>
+                  <button style={{
+                    padding: '8px 16px',
+                    background: '#f3f4f6',
+                    color: '#6b7280',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer'
+                  }}>
+                    All
+                  </button>
+                  <button style={{
+                    padding: '8px 16px',
+                    background: '#f3f4f6',
+                    color: '#6b7280',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer'
+                  }}>
+                    Pending
+                  </button>
+                  <button style={{
+                    padding: '8px 16px',
+                    background: '#f3f4f6',
+                    color: '#6b7280',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer'
+                  }}>
+                    Confirmed
+                  </button>
+                </div>
+              </div>
+
+              {/* Bookings List */}
+              {mockBookings.map((booking) => (
+                <div key={booking.id} style={{
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  marginBottom: '16px',
+                  background: 'white'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    gap: '16px',
+                    marginBottom: '12px'
+                  }}>
+                    <img 
+                      src={booking.serviceImage} 
+                      alt={booking.serviceTitle}
+                      style={{
+                        width: '80px',
+                        height: '60px',
+                        borderRadius: '8px',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        marginBottom: '8px'
+                      }}>
+                        <div>
+                          <h3 style={{
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            color: '#1a1a1a',
+                            margin: '0 0 4px 0'
+                          }}>
+                            {booking.serviceTitle}
+                          </h3>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            marginBottom: '4px'
+                          }}>
+                            <span style={{
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              background: booking.status === 'pending' ? '#fef3c7' : 
+                                        booking.status === 'confirmed' ? '#dcfce7' : '#dbeafe',
+                              color: booking.status === 'pending' ? '#92400e' : 
+                                     booking.status === 'confirmed' ? '#166534' : '#1e40af'
+                            }}>
+                              {booking.status}
+                            </span>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '18px', fontWeight: '700', color: '#10b981' }}>
+                            {booking.price}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                            {booking.date} at {booking.time}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Customer Info */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        marginBottom: '8px'
+                      }}>
+                        <img 
+                          src={booking.customerAvatar} 
+                          alt={booking.customerName}
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                        <div>
+                          <div style={{
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            color: '#1a1a1a'
+                          }}>
+                            {booking.customerName}
+                          </div>
+                          <div style={{
+                            fontSize: '12px',
+                            color: '#6b7280'
+                          }}>
+                            {booking.customerPhone}
+                          </div>
+                        </div>
+                      </div>
+
+                      {booking.notes && (
+                        <div style={{
+                          fontSize: '12px',
+                          color: '#6b7280',
+                          fontStyle: 'italic',
+                          marginTop: '8px',
+                          padding: '8px',
+                          background: '#f9fafb',
+                          borderRadius: '6px'
+                        }}>
+                          📝 {booking.notes}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div style={{
+                    display: 'flex',
+                    gap: '12px',
+                    flexWrap: 'wrap'
+                  }}>
+                    <button style={{
+                      padding: '8px 16px',
+                      background: '#10b981',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}>
+                      Accept
+                    </button>
+                    <button style={{
+                      padding: '8px 16px',
+                      background: '#dc2626',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}>
+                      Decline
+                    </button>
+                    <button style={{
+                      padding: '8px 16px',
+                      background: 'white',
+                      color: '#6b7280',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}>
+                      Contact
+                    </button>
+                    <button style={{
+                      padding: '8px 16px',
+                      background: 'white',
+                      color: '#6b7280',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}>
+                      View Details
                     </button>
                   </div>
                 </div>
