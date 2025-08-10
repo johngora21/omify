@@ -3,7 +3,10 @@ import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 
 class BottomNav extends StatelessWidget {
-  const BottomNav({super.key});
+  final VoidCallback? onEroticTabPressed;
+  final VoidCallback? onHomeTabPressed;
+  
+  const BottomNav({super.key, this.onEroticTabPressed, this.onHomeTabPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,18 @@ class BottomNav extends StatelessWidget {
                     final icon = isActive ? item['activeIcon'] : item['icon'];
                     
                     return GestureDetector(
-                      onTap: () => context.go(item['path'] as String),
+                      onTap: () {
+                        if (item['path'] == '/' && location == '/' && onHomeTabPressed != null) {
+                          // If already on home page, scroll to top
+                          onHomeTabPressed!();
+                        } else if (item['path'] == '/erotic' && location == '/erotic' && onEroticTabPressed != null) {
+                          // If already on erotic page, scroll to top
+                          onEroticTabPressed!();
+                        } else {
+                          // Navigate to the page
+                          context.go(item['path'] as String);
+                        }
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
