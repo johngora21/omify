@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 class ReelsPage extends StatefulWidget {
   const ReelsPage({super.key});
@@ -13,6 +14,7 @@ class _ReelsPageState extends State<ReelsPage> {
   final Set<String> _likedVideos = <String>{};
   final Set<String> _savedVideos = <String>{};
   int _currentVideoIndex = 0;
+  int _selectedTabIndex = 0; // 0 for "For You", 1 for "Following"
 
   final List<Map<String, dynamic>> _reels = [
     {
@@ -119,6 +121,12 @@ class _ReelsPageState extends State<ReelsPage> {
     });
   }
 
+  void _onTabChanged(int index) {
+    setState(() {
+      _selectedTabIndex = index;
+    });
+  }
+
   String _formatNumber(int num) {
     if (num >= 1000000) {
       return '${(num / 1000000).toStringAsFixed(1)}M';
@@ -180,7 +188,7 @@ class _ReelsPageState extends State<ReelsPage> {
           right: 16,
           bottom: 0,
           child: Container(
-            padding: const EdgeInsets.only(bottom: 100),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               children: [
                 // Profile Button
@@ -260,7 +268,7 @@ class _ReelsPageState extends State<ReelsPage> {
                   child: Column(
                     children: [
                       const Icon(
-                        Icons.chat_bubble_outline,
+                        Ionicons.chatbubble,
                         color: Colors.white,
                         size: 28,
                       ),
@@ -337,7 +345,7 @@ class _ReelsPageState extends State<ReelsPage> {
           left: 16,
           right: 80,
           child: Container(
-            padding: const EdgeInsets.only(bottom: 100),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -424,36 +432,58 @@ class _ReelsPageState extends State<ReelsPage> {
           top: 60,
           left: 16,
           right: 16,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              const Text(
-                'For You',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/create');
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'Upload',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+              // Tab Navigation
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => _onTabChanged(0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: _selectedTabIndex == 0 ? Colors.white : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'For You',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: _selectedTabIndex == 0 ? Colors.white : Colors.white.withOpacity(0.7),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(width: 40),
+                  GestureDetector(
+                    onTap: () => _onTabChanged(1),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: _selectedTabIndex == 1 ? Colors.white : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Following',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: _selectedTabIndex == 1 ? Colors.white : Colors.white.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -465,7 +495,7 @@ class _ReelsPageState extends State<ReelsPage> {
           left: 0,
           right: 0,
           child: Container(
-            padding: const EdgeInsets.only(bottom: 80),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
