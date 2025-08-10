@@ -1,0 +1,67 @@
+# Omify App
+
+This is the Omify application file.
+
+## About Omify
+
+Omify is a comprehensive platform that connects users with various service providers including:
+- Escorts
+- Massage services
+- Erotic services
+- Car rentals
+- Accommodation
+- Adventure activities
+- Dating services
+- Professional services
+- Entertainment
+- Sports activities
+
+## Features
+
+- User registration and authentication
+- Service provider profiles
+- Booking system
+- Messaging between users and providers
+- Location-based search
+- Reviews and ratings
+- Premium features
+- Mobile-responsive design
+
+## Technology Stack
+
+- React 19 with TypeScript
+- Vite for build tooling
+- Tailwind CSS for styling
+- React Router for navigation
+- Leaflet for maps
+- React Icons for icons
+
+## Getting Started
+
+1. Install dependencies: `npm install`
+2. Run development server: `npm run dev`
+3. Open http://localhost:5173 in your browser
+
+## Project Structure
+
+```
+omify/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/         # Page components
+│   ├── types/         # TypeScript type definitions
+│   └── assets/        # Static assets
+├── public/            # Public assets
+└── package.json       # Dependencies and scripts
+```
+
+## Development
+
+The application is currently a web-based React application. For mobile development, consider:
+- React Native with Expo
+- Progressive Web App (PWA) features
+- Native mobile app development
+
+## License
+
+This project is private and proprietary.
