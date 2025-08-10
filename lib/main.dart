@@ -7,6 +7,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ionicons/ionicons.dart';
 import './pages/home_page.dart';
 import './pages/erotic_page.dart';
+import './pages/reels_page.dart';
+import './pages/create_post_page.dart';
+import './pages/entertainment_page.dart';
 import './components/bottom_nav.dart';
 
 void main() {
@@ -49,9 +52,7 @@ class OmifyApp extends StatelessWidget {
         ),
         GoRoute(
           path: '/create',
-          builder: (context, state) => const Scaffold(
-            body: Center(child: Text('Create Post Page')),
-          ),
+          builder: (context, state) => const MainNavigationPage(),
         ),
       ],
     );
@@ -143,14 +144,13 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         currentPage = EroticPage(key: _eroticPageKey);
         break;
       case '/reels':
-        currentPage = const Scaffold(
-          body: Center(child: Text('Reels Page')),
-        );
+        currentPage = const ReelsPage();
         break;
       case '/entertainment':
-        currentPage = const Scaffold(
-          body: Center(child: Text('Entertainment Page')),
-        );
+        currentPage = const EntertainmentPage();
+        break;
+      case '/create':
+        currentPage = const CreatePostPage();
         break;
       default:
         currentPage = HomePage(key: _homePageKey);
@@ -158,10 +158,12 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     
     return Scaffold(
       body: currentPage,
-      bottomNavigationBar: BottomNav(
-        onHomeTabPressed: () => _homePageKey.currentState?.scrollToTop(),
-        onEroticTabPressed: () => _eroticPageKey.currentState?.scrollToTop(),
-      ),
+      bottomNavigationBar: location == '/create' 
+          ? null 
+          : BottomNav(
+              onHomeTabPressed: () => _homePageKey.currentState?.scrollToTop(),
+              onEroticTabPressed: () => _eroticPageKey.currentState?.scrollToTop(),
+            ),
     );
   }
 }
