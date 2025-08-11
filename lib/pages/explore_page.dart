@@ -18,6 +18,52 @@ class _ExplorePageState extends State<ExplorePage> {
     'technology', 'health', 'education', 'business', 'lifestyle'
   ];
 
+  // Search suggestions data
+  final List<Map<String, dynamic>> _searchSuggestions = [
+    {
+      'type': 'account',
+      'username': '@instagram_user1',
+      'displayName': 'Instagram Creator',
+      'avatar': 'https://picsum.photos/40/40?random=10',
+      'followers': '125K',
+      'isVerified': true,
+    },
+    {
+      'type': 'account',
+      'username': '@trending_creator',
+      'displayName': 'Trending Now',
+      'avatar': 'https://picsum.photos/40/40?random=11',
+      'followers': '89K',
+      'isVerified': false,
+    },
+    {
+      'type': 'trending',
+      'title': 'Fashion Week',
+      'views': '2.1M',
+      'hashtag': '#fashionweek',
+    },
+    {
+      'type': 'trending',
+      'title': 'Food Recipe',
+      'views': '890K',
+      'hashtag': '#foodrecipe',
+    },
+    {
+      'type': 'trending',
+      'title': 'Travel Guide',
+      'views': '1.5M',
+      'hashtag': '#travelguide',
+    },
+    {
+      'type': 'account',
+      'username': '@fashion_influencer',
+      'displayName': 'Fashion Tips',
+      'avatar': 'https://picsum.photos/40/40?random=12',
+      'followers': '256K',
+      'isVerified': true,
+    },
+  ];
+
   final List<Map<String, dynamic>> _exploreResults = [
     {
       'id': '1',
@@ -113,6 +159,22 @@ class _ExplorePageState extends State<ExplorePage> {
     }).toList();
   }
 
+  List<Map<String, dynamic>> get _filteredSearchSuggestions {
+    if (_searchQuery.isEmpty) {
+      return _searchSuggestions;
+    }
+    return _searchSuggestions.where((item) {
+      if (item['type'] == 'account') {
+        return item['username'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+               item['displayName'].toLowerCase().contains(_searchQuery.toLowerCase());
+      } else if (item['type'] == 'trending') {
+        return item['title'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+               item['hashtag'].toLowerCase().contains(_searchQuery.toLowerCase());
+      }
+      return false;
+    }).toList();
+  }
+
   String _getCategoryLabel(String category) {
     switch (category) {
       case 'all':
@@ -175,41 +237,52 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
 
-            // Category Tabs
-            Container(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: _categories.length,
-                itemBuilder: (context, index) {
-                  final category = _categories[index];
-                  final isActive = _activeCategory == category;
-                  
-                  return GestureDetector(
-                    onTap: () => setState(() => _activeCategory = category),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 12),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: isActive ? Colors.black : Colors.grey[100],
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Center(
-                        child: Text(
-                          _getCategoryLabel(category),
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: isActive ? Colors.white : Colors.black87,
+            // Search Suggestions (show when typing)
+            if (_searchQuery.isNotEmpty) ...[
+              Container(
+                color: Colors.white,
+                child: _buildSearchSuggestions(),
+              ),
+              const SizedBox(height: 8),
+            ],
+
+            // Category Tabs (hide when typing)
+            if (_searchQuery.isEmpty) ...[
+              Container(
+                height: 40,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _categories.length,
+                  itemBuilder: (context, index) {
+                    final category = _categories[index];
+                    final isActive = _activeCategory == category;
+                    
+                    return GestureDetector(
+                      onTap: () => setState(() => _activeCategory = category),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: isActive ? Colors.black : Colors.grey[100],
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Center(
+                          child: Text(
+                            _getCategoryLabel(category),
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: isActive ? Colors.white : Colors.black87,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
+            ],
 
             // Explore Grid
             Expanded(
@@ -311,6 +384,172 @@ class _ExplorePageState extends State<ExplorePage> {
         ],
       ),
     );
+  }
+
+  Widget _buildSearchSuggestions() {
+    if (_filteredSearchSuggestions.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          'No suggestions found',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Suggestions',
+            style: TextStyle(
+              color: Colors.grey[800],
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...(_filteredSearchSuggestions.take(5).map((suggestion) => _buildSuggestionItem(suggestion))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuggestionItem(Map<String, dynamic> suggestion) {
+    if (suggestion['type'] == 'account') {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: NetworkImage(suggestion['avatar']),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        suggestion['displayName'],
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (suggestion['isVerified']) ...[
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.verified,
+                          size: 14,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ],
+                  ),
+                  Text(
+                    suggestion['username'],
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    '${suggestion['followers']} followers',
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Text(
+                'Follow',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (suggestion['type'] == 'trending') {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.trending_up,
+                color: Colors.black54,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    suggestion['title'],
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    suggestion['hashtag'],
+                    style: TextStyle(
+                      color: Colors.blue[600],
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    '${suggestion['views']} views',
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildEmptyState() {

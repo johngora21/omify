@@ -23,6 +23,52 @@ class _ReelsPageState extends State<ReelsPage> {
     'forYou', 'trending', 'following', 'live', 'nearby'
   ];
 
+  // Search suggestions data
+  final List<Map<String, dynamic>> _searchSuggestions = [
+    {
+      'type': 'account',
+      'username': '@tiktok_user1',
+      'displayName': 'TikTok Creator',
+      'avatar': 'https://picsum.photos/40/40?random=1',
+      'followers': '125K',
+      'isVerified': true,
+    },
+    {
+      'type': 'account',
+      'username': '@trending_creator',
+      'displayName': 'Trending Now',
+      'avatar': 'https://picsum.photos/40/40?random=2',
+      'followers': '89K',
+      'isVerified': false,
+    },
+    {
+      'type': 'trending',
+      'title': 'Dance Challenge',
+      'views': '2.1M',
+      'hashtag': '#dancechallenge',
+    },
+    {
+      'type': 'trending',
+      'title': 'Food Recipe',
+      'views': '890K',
+      'hashtag': '#foodrecipe',
+    },
+    {
+      'type': 'trending',
+      'title': 'Comedy Skit',
+      'views': '1.5M',
+      'hashtag': '#comedy',
+    },
+    {
+      'type': 'account',
+      'username': '@fashion_influencer',
+      'displayName': 'Fashion Tips',
+      'avatar': 'https://picsum.photos/40/40?random=3',
+      'followers': '256K',
+      'isVerified': true,
+    },
+  ];
+
   final List<Map<String, dynamic>> _searchResults = [
     {
       'id': '1',
@@ -287,6 +333,22 @@ class _ReelsPageState extends State<ReelsPage> {
     }).toList();
   }
 
+  List<Map<String, dynamic>> get _filteredSearchSuggestions {
+    if (_searchQuery.isEmpty) {
+      return _searchSuggestions;
+    }
+    return _searchSuggestions.where((item) {
+      if (item['type'] == 'account') {
+        return item['username'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+               item['displayName'].toLowerCase().contains(_searchQuery.toLowerCase());
+      } else if (item['type'] == 'trending') {
+        return item['title'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+               item['hashtag'].toLowerCase().contains(_searchQuery.toLowerCase());
+      }
+      return false;
+    }).toList();
+  }
+
   String _getSearchCategoryLabel(String category) {
     switch (category) {
       case 'forYou':
@@ -352,48 +414,59 @@ class _ReelsPageState extends State<ReelsPage> {
               ),
             ),
 
-            // TikTok Style Tabs
-            Container(
-              height: 40,
-              color: Colors.black,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: _searchCategories.length,
-                itemBuilder: (context, index) {
-                  final category = _searchCategories[index];
-                  final isActive = _activeSearchCategory == category;
-                  
-                  return GestureDetector(
-                    onTap: () => setState(() => _activeSearchCategory = category),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 12),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: isActive ? Colors.white : Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(
-                          color: isActive ? Colors.white : Colors.transparent,
-                          width: 1,
+            // Search Suggestions (show when typing)
+            if (_searchQuery.isNotEmpty) ...[
+              Container(
+                color: Colors.black,
+                child: _buildSearchSuggestions(),
+              ),
+              const SizedBox(height: 8),
+            ],
+
+            // TikTok Style Tabs (hide when typing)
+            if (_searchQuery.isEmpty) ...[
+              Container(
+                height: 40,
+                color: Colors.black,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _searchCategories.length,
+                  itemBuilder: (context, index) {
+                    final category = _searchCategories[index];
+                    final isActive = _activeSearchCategory == category;
+                    
+                    return GestureDetector(
+                      onTap: () => setState(() => _activeSearchCategory = category),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: isActive ? Colors.white : Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: isActive ? Colors.white : Colors.transparent,
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          _getSearchCategoryLabel(category),
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: isActive ? Colors.black : Colors.white,
+                        child: Center(
+                          child: Text(
+                            _getSearchCategoryLabel(category),
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: isActive ? Colors.black : Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
 
-            const SizedBox(height: 8),
+              const SizedBox(height: 8),
+            ],
 
             // TikTok Style Grid
             Expanded(
@@ -515,6 +588,172 @@ class _ReelsPageState extends State<ReelsPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildSearchSuggestions() {
+    if (_filteredSearchSuggestions.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          'No suggestions found',
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 14,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Suggestions',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...(_filteredSearchSuggestions.take(5).map((suggestion) => _buildSuggestionItem(suggestion))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuggestionItem(Map<String, dynamic> suggestion) {
+    if (suggestion['type'] == 'account') {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: NetworkImage(suggestion['avatar']),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        suggestion['displayName'],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (suggestion['isVerified']) ...[
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.verified,
+                          size: 14,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ],
+                  ),
+                  Text(
+                    suggestion['username'],
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    '${suggestion['followers']} followers',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Text(
+                'Follow',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (suggestion['type'] == 'trending') {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.trending_up,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    suggestion['title'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    suggestion['hashtag'],
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    '${suggestion['views']} views',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildEmptySearchState() {
