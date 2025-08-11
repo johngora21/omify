@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -218,17 +219,21 @@ class HomePageState extends State<HomePage> {
                         icon: const FaIcon(
                           FontAwesomeIcons.heart,
                           color: Color(0xFF262626),
-                          size: 26,
+                          size: 24,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.go('/notifications');
+                        },
                       ),
                       IconButton(
                         icon: const FaIcon(
-                          FontAwesomeIcons.bookmark,
+                          FontAwesomeIcons.facebookMessenger,
                           color: Color(0xFF262626),
                           size: 24,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.go('/messages');
+                        },
                       ),
                     ],
                   ),

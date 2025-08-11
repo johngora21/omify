@@ -5,12 +5,14 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ionicons/ionicons.dart';
-import './pages/home_page.dart';
 import './pages/erotic_page.dart';
+import './pages/home_page.dart';
 import './pages/reels_page.dart';
-import './pages/create_post_page.dart';
 import './pages/entertainment_page.dart';
+import './pages/create_post_page.dart';
 import './components/bottom_nav.dart';
+import './pages/notifications_page.dart';
+import './pages/messages_page.dart';
 
 void main() {
   runApp(const OmifyApp());
@@ -53,6 +55,14 @@ class OmifyApp extends StatelessWidget {
         GoRoute(
           path: '/create',
           builder: (context, state) => const MainNavigationPage(),
+        ),
+        GoRoute(
+          path: '/notifications',
+          builder: (context, state) => const NotificationsPage(),
+        ),
+        GoRoute(
+          path: '/messages',
+          builder: (context, state) => const MessagesPage(),
         ),
       ],
     );
@@ -151,6 +161,12 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         break;
       case '/create':
         currentPage = const CreatePostPage();
+        break;
+      case '/notifications':
+        currentPage = const NotificationsPage();
+        break;
+      case '/messages':
+        currentPage = const MessagesPage();
         break;
       default:
         currentPage = HomePage(key: _homePageKey);

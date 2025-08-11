@@ -14,7 +14,7 @@ class _ReelsPageState extends State<ReelsPage> {
   final Set<String> _likedVideos = <String>{};
   final Set<String> _savedVideos = <String>{};
   int _currentVideoIndex = 0;
-  int _selectedTabIndex = 0; // 0 for "For You", 1 for "Following"
+  int _selectedTabIndex = 0; // 0 for "For You", 1 for "Following", 2 for "Live"
 
   final List<Map<String, dynamic>> _reels = [
     {
@@ -29,7 +29,9 @@ class _ReelsPageState extends State<ReelsPage> {
       'shares': 89,
       'music': 'Chill Vibes - Sophia Grace',
       'duration': '0:15',
-      'verified': true
+      'verified': true,
+      'isLive': false,
+      'category': 'forYou'
     },
     {
       'id': '2',
@@ -43,7 +45,9 @@ class _ReelsPageState extends State<ReelsPage> {
       'shares': 156,
       'music': 'Peaceful Melodies - Emma',
       'duration': '0:22',
-      'verified': false
+      'verified': false,
+      'isLive': false,
+      'category': 'following'
     },
     {
       'id': '3',
@@ -57,7 +61,9 @@ class _ReelsPageState extends State<ReelsPage> {
       'shares': 234,
       'music': 'Luxury Beats - Luna',
       'duration': '0:18',
-      'verified': true
+      'verified': true,
+      'isLive': false,
+      'category': 'forYou'
     },
     {
       'id': '4',
@@ -71,7 +77,61 @@ class _ReelsPageState extends State<ReelsPage> {
       'shares': 134,
       'music': 'Creative Flow - Maya',
       'duration': '0:25',
-      'verified': false
+      'verified': false,
+      'isLive': false,
+      'category': 'following'
+    },
+    // Live reels
+    {
+      'id': '5',
+      'username': 'live_events',
+      'displayName': 'Live Events',
+      'avatar': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+      'video': 'https://images.unsplash.com/photo-1519735997400-2f7bbcd69b1a?w=600&h=800&fit=crop',
+      'caption': '🎉 LIVE NOW: Exclusive party experience! Join us for the ultimate night out! #Live #Party #Exclusive',
+      'likes': 5420,
+      'comments': 892,
+      'shares': 445,
+      'music': 'Live Beats - DJ Mix',
+      'duration': 'LIVE',
+      'verified': true,
+      'isLive': true,
+      'category': 'live',
+      'viewers': 15420
+    },
+    {
+      'id': '6',
+      'username': 'fitness_live',
+      'displayName': 'Fitness Live',
+      'avatar': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+      'video': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=800&fit=crop',
+      'caption': '💪 LIVE WORKOUT: High-intensity training session! Let\'s get fit together! #Live #Fitness #Workout',
+      'likes': 3890,
+      'comments': 567,
+      'shares': 234,
+      'music': 'Workout Mix - Energy Boost',
+      'duration': 'LIVE',
+      'verified': false,
+      'isLive': true,
+      'category': 'live',
+      'viewers': 8920
+    },
+    {
+      'id': '7',
+      'username': 'cooking_show',
+      'displayName': 'Cooking Show',
+      'avatar': 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop&crop=face',
+      'video': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=800&fit=crop',
+      'caption': '👨‍🍳 LIVE COOKING: Making the perfect pasta! Watch and learn! #Live #Cooking #Food',
+      'likes': 2156,
+      'comments': 345,
+      'shares': 123,
+      'music': 'Kitchen Vibes - Cooking Sounds',
+      'duration': 'LIVE',
+      'verified': true,
+      'isLive': true,
+      'category': 'live',
+      'viewers': 5670
     }
   ];
 
@@ -136,17 +196,33 @@ class _ReelsPageState extends State<ReelsPage> {
     return num.toString();
   }
 
+  // Get filtered content based on selected tab
+  List<Map<String, dynamic>> _getFilteredContent() {
+    switch (_selectedTabIndex) {
+      case 0: // For You
+        return _reels.where((reel) => reel['category'] == 'forYou').toList();
+      case 1: // Following
+        return _reels.where((reel) => reel['category'] == 'following').toList();
+      case 2: // Live
+        return _reels.where((reel) => reel['isLive'] == true).toList();
+      default:
+        return _reels.where((reel) => reel['category'] == 'forYou').toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredReels = _getFilteredContent();
+    
     return Scaffold(
       backgroundColor: Colors.black,
       body: PageView.builder(
         controller: _pageController,
         scrollDirection: Axis.vertical,
         onPageChanged: _onPageChanged,
-        itemCount: _reels.length,
+        itemCount: filteredReels.length,
         itemBuilder: (context, index) {
-          final reel = _reels[index];
+          final reel = filteredReels[index];
           return _buildReelCard(reel, index);
         },
       ),
@@ -191,6 +267,39 @@ class _ReelsPageState extends State<ReelsPage> {
             padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               children: [
+                // Live indicator for live content
+                if (reel['isLive'])
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEF4444),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'LIVE',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                
                 // Profile Button
                 GestureDetector(
                   onTap: () {},
@@ -416,10 +525,11 @@ class _ReelsPageState extends State<ReelsPage> {
 
                 // Duration
                 Text(
-                  reel['duration'],
-                  style: const TextStyle(
+                  reel['isLive'] ? 'LIVE' : reel['duration'],
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white70,
+                    color: reel['isLive'] ? const Color(0xFFEF4444) : Colors.white70,
+                    fontWeight: reel['isLive'] ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
               ],
@@ -434,6 +544,39 @@ class _ReelsPageState extends State<ReelsPage> {
           right: 16,
           child: Column(
             children: [
+              // Live indicator for live content
+              if (reel['isLive'])
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEF4444),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'LIVE ${reel['viewers'] != null ? '• ${_formatNumber(reel['viewers'])} watching' : ''}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              
               // Tab Navigation
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -441,7 +584,7 @@ class _ReelsPageState extends State<ReelsPage> {
                   GestureDetector(
                     onTap: () => _onTabChanged(0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
@@ -453,18 +596,18 @@ class _ReelsPageState extends State<ReelsPage> {
                       child: Text(
                         'For You',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: _selectedTabIndex == 0 ? Colors.white : Colors.white.withOpacity(0.7),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 40),
+                  const SizedBox(width: 24),
                   GestureDetector(
                     onTap: () => _onTabChanged(1),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
@@ -476,9 +619,32 @@ class _ReelsPageState extends State<ReelsPage> {
                       child: Text(
                         'Following',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: _selectedTabIndex == 1 ? Colors.white : Colors.white.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  GestureDetector(
+                    onTap: () => _onTabChanged(2),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: _selectedTabIndex == 2 ? Colors.white : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Live',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: _selectedTabIndex == 2 ? Colors.white : Colors.white.withOpacity(0.7),
                         ),
                       ),
                     ),
