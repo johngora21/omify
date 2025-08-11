@@ -13,6 +13,7 @@ import './pages/create_post_page.dart';
 import './components/bottom_nav.dart';
 import './pages/notifications_page.dart';
 import './pages/messages_page.dart';
+import './pages/explore_page.dart';
 
 void main() {
   runApp(const OmifyApp());
@@ -63,6 +64,11 @@ class OmifyApp extends StatelessWidget {
         GoRoute(
           path: '/messages',
           builder: (context, state) => const MessagesPage(),
+        ),
+
+        GoRoute(
+          path: '/explore',
+          builder: (context, state) => const ExplorePage(),
         ),
       ],
     );

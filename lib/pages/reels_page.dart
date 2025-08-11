@@ -15,6 +15,94 @@ class _ReelsPageState extends State<ReelsPage> {
   final Set<String> _savedVideos = <String>{};
   int _currentVideoIndex = 0;
   int _selectedTabIndex = 0; // 0 for "For You", 1 for "Following", 2 for "Live"
+  bool _showSearch = false;
+  String _searchQuery = '';
+  String _activeSearchCategory = 'forYou';
+
+  final List<String> _searchCategories = [
+    'forYou', 'trending', 'following', 'live', 'nearby'
+  ];
+
+  final List<Map<String, dynamic>> _searchResults = [
+    {
+      'id': '1',
+      'type': 'video',
+      'image': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=600&fit=crop&crop=center',
+      'title': 'Creative Photo Session',
+      'user': 'Emma Thompson',
+      'likes': '124K',
+      'comments': '2.1K',
+      'shares': '456',
+      'music': 'Original Sound - Emma',
+      'description': 'Amazing creative session! ✨',
+      'height': 1.5,
+    },
+    {
+      'id': '2',
+      'type': 'video',
+      'image': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face',
+      'title': 'Dance Challenge',
+      'user': 'Alex Chen',
+      'likes': '89K',
+      'comments': '1.5K',
+      'shares': '234',
+      'music': 'Trending Song - Artist',
+      'description': 'Join the challenge! 💃',
+      'height': 1.3,
+    },
+    {
+      'id': '3',
+      'type': 'video',
+      'image': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop&crop=face',
+      'title': 'Cooking Tutorial',
+      'user': 'Sarah Wilson',
+      'likes': '67K',
+      'comments': '892',
+      'shares': '123',
+      'music': 'Cooking Vibes - Chef',
+      'description': 'Easy recipe for beginners 👩‍🍳',
+      'height': 1.4,
+    },
+    {
+      'id': '4',
+      'type': 'video',
+      'image': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=center',
+      'title': 'Travel Vlog',
+      'user': 'Mike Johnson',
+      'likes': '156K',
+      'comments': '3.2K',
+      'shares': '789',
+      'music': 'Travel Music - Wanderer',
+      'description': 'Beautiful sunset in Bali 🌅',
+      'height': 1.6,
+    },
+    {
+      'id': '5',
+      'type': 'video',
+      'image': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=center',
+      'title': 'Fashion Haul',
+      'user': 'Lisa Park',
+      'likes': '98K',
+      'comments': '1.8K',
+      'shares': '345',
+      'music': 'Fashion Beats - Style',
+      'description': 'New collection is fire! 🔥',
+      'height': 1.2,
+    },
+    {
+      'id': '6',
+      'type': 'video',
+      'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=center',
+      'title': 'Workout Routine',
+      'user': 'David Kim',
+      'likes': '203K',
+      'comments': '4.5K',
+      'shares': '1.2K',
+      'music': 'Workout Mix - Fitness',
+      'description': 'Get fit with me! 💪',
+      'height': 1.5,
+    },
+  ];
 
   final List<Map<String, dynamic>> _reels = [
     {
@@ -187,6 +275,280 @@ class _ReelsPageState extends State<ReelsPage> {
     });
   }
 
+  List<Map<String, dynamic>> get _filteredSearchResults {
+    if (_searchQuery.isEmpty) {
+      return _searchResults;
+    }
+
+    return _searchResults.where((item) {
+      return item['title'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+             item['user'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+             item['description'].toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
+  }
+
+  String _getSearchCategoryLabel(String category) {
+    switch (category) {
+      case 'forYou':
+        return 'For You';
+      case 'trending':
+        return 'Trending';
+      case 'following':
+        return 'Following';
+      case 'live':
+        return 'Live';
+      case 'nearby':
+        return 'Nearby';
+      default:
+        return category;
+    }
+  }
+
+  Widget _buildSearchView() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header with Back Button and Search Bar
+            Container(
+              color: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => setState(() => _showSearch = false),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Icon(Icons.arrow_back, size: 20, color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: TextField(
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: 'Search videos, users, sounds...',
+                          hintStyle: TextStyle(color: Colors.white70),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          prefixIcon: Icon(Icons.search, color: Colors.white70, size: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // TikTok Style Tabs
+            Container(
+              height: 40,
+              color: Colors.black,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _searchCategories.length,
+                itemBuilder: (context, index) {
+                  final category = _searchCategories[index];
+                  final isActive = _activeSearchCategory == category;
+                  
+                  return GestureDetector(
+                    onTap: () => setState(() => _activeSearchCategory = category),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isActive ? Colors.white : Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                          color: isActive ? Colors.white : Colors.transparent,
+                          width: 1,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          _getSearchCategoryLabel(category),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: isActive ? Colors.black : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // TikTok Style Grid
+            Expanded(
+              child: _filteredSearchResults.isEmpty
+                  ? _buildEmptySearchState()
+                  : _buildTikTokSearchGrid(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTikTokSearchGrid() {
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.7,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: _filteredSearchResults.length,
+      itemBuilder: (context, index) {
+        return _buildTikTokSearchCard(_filteredSearchResults[index]);
+      },
+    );
+  }
+
+  Widget _buildTikTokSearchCard(Map<String, dynamic> item) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                item['image'],
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          
+          // Gradient Overlay
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.7),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // User Info at Bottom
+          Positioned(
+            bottom: 8,
+            left: 8,
+            right: 8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '@${item['user'].toLowerCase().replaceAll(' ', '')}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  item['description'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.music_note,
+                      color: Colors.white,
+                      size: 12,
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        item['music'],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptySearchState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search_off,
+            size: 64,
+            color: Colors.white.withOpacity(0.5),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No results found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.white.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Try searching for something else',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white.withOpacity(0.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _formatNumber(int num) {
     if (num >= 1000000) {
       return '${(num / 1000000).toStringAsFixed(1)}M';
@@ -212,6 +574,10 @@ class _ReelsPageState extends State<ReelsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_showSearch) {
+      return _buildSearchView();
+    }
+    
     final filteredReels = _getFilteredContent();
     
     return Scaffold(
@@ -578,8 +944,10 @@ class _ReelsPageState extends State<ReelsPage> {
                 ),
               
               // Tab Navigation
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () => _onTabChanged(0),
@@ -649,10 +1017,27 @@ class _ReelsPageState extends State<ReelsPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 24),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _showSearch = !_showSearch;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Icon(
+                        Icons.search,
+                        color: _showSearch ? Colors.white : Colors.white.withOpacity(0.7),
+                        size: 24,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+      ]
+      ),
         ),
 
         // Video Navigation Dots

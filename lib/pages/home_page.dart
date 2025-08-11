@@ -211,9 +211,11 @@ class HomePageState extends State<HomePage> {
                         icon: const FaIcon(
                           FontAwesomeIcons.search,
                           color: Color(0xFF262626),
-                          size: 24,
+                          size: 20,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.go('/explore');
+                        },
                       ),
                       IconButton(
                         icon: const FaIcon(
