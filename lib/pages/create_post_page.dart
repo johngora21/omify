@@ -349,14 +349,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   // Post button
                   GestureDetector(
                     onTap: () {
-                      // Handle post creation
-                      // This functionality was removed, so this button will do nothing.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Post functionality is currently disabled.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
+                      // Navigate to post details page
+                      context.go('/post-details');
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

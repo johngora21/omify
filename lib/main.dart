@@ -33,6 +33,8 @@ import './pages/dating_registration_page.dart';
 import './pages/massage_registration_page.dart';
 import './pages/escort_registration_page.dart';
 import './pages/group_details_page.dart';
+import './pages/post_details_page.dart';
+import './pages/service_form_page.dart';
 
 void main() {
   runApp(const OmifyApp());
@@ -169,6 +171,14 @@ class OmifyApp extends StatelessWidget {
         GoRoute(
           path: '/escort-registration',
           builder: (context, state) => const EscortRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/post-details',
+          builder: (context, state) => const PostDetailsPage(),
+        ),
+        GoRoute(
+          path: '/service-form',
+          builder: (context, state) => const ServiceFormPage(),
         ),
       ],
     );

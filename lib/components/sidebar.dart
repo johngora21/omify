@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Sidebar extends StatelessWidget {
+class Sidebar extends StatefulWidget {
   final bool isOpen;
   final VoidCallback onClose;
 
@@ -12,14 +12,28 @@ class Sidebar extends StatelessWidget {
   });
 
   @override
+  State<Sidebar> createState() => _SidebarState();
+}
+
+class _SidebarState extends State<Sidebar> {
+  bool _isDarkTheme = false;
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkTheme = !_isDarkTheme;
+    });
+    // TODO: Implement actual theme switching logic
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         // Overlay
-        if (isOpen)
+        if (widget.isOpen)
           Positioned.fill(
             child: GestureDetector(
-              onTap: onClose,
+              onTap: widget.onClose,
               child: Container(
                 color: Colors.black.withOpacity(0.5),
               ),
@@ -30,7 +44,7 @@ class Sidebar extends StatelessWidget {
         AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          left: isOpen ? 0 : -MediaQuery.of(context).size.width,
+          left: widget.isOpen ? 0 : -MediaQuery.of(context).size.width,
           top: 0,
           width: MediaQuery.of(context).size.width * 0.7,
           height: MediaQuery.of(context).size.height + MediaQuery.of(context).padding.top,
@@ -52,7 +66,7 @@ class Sidebar extends StatelessWidget {
                   // User Profile Section
                   GestureDetector(
                     onTap: () {
-                      onClose();
+                      widget.onClose();
                       context.go('/profile');
                     },
                     child: Container(
@@ -131,7 +145,7 @@ class Sidebar extends StatelessWidget {
                             icon: Icons.explore_outlined,
                             label: 'Explore',
                             onTap: () {
-                              onClose();
+                              widget.onClose();
                               context.go('/discover');
                             },
                           ),
@@ -140,7 +154,7 @@ class Sidebar extends StatelessWidget {
                             icon: Icons.play_circle_outline,
                             label: 'Movies',
                             onTap: () {
-                              onClose();
+                              widget.onClose();
                               context.go('/movies');
                             },
                           ),
@@ -149,7 +163,7 @@ class Sidebar extends StatelessWidget {
                             icon: Icons.bookmark_outline,
                             label: 'Bookmarks',
                             onTap: () {
-                              onClose();
+                              widget.onClose();
                               context.go('/bookmarks');
                             },
                           ),
@@ -158,7 +172,7 @@ class Sidebar extends StatelessWidget {
                             icon: Icons.star_outline,
                             label: 'Premium',
                             onTap: () {
-                              onClose();
+                              widget.onClose();
                               context.go('/premium');
                             },
                           ),
@@ -167,7 +181,7 @@ class Sidebar extends StatelessWidget {
                             icon: Icons.settings_outlined,
                             label: 'Settings',
                             onTap: () {
-                              onClose();
+                              widget.onClose();
                               context.go('/settings');
                             },
                           ),
@@ -176,31 +190,27 @@ class Sidebar extends StatelessWidget {
                     ),
                   ),
                   
-                  // Logout Button at Bottom
+                  // Theme Toggle at Bottom
                   Container(
                     margin: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {
-                          onClose();
-                          // Add logout logic here
-                          context.go('/');
-                        },
+                        onTap: _toggleTheme,
                         borderRadius: BorderRadius.circular(10),
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                           child: Row(
                             children: [
-                              const Icon(
-                                Icons.logout,
+                              Icon(
+                                _isDarkTheme ? Icons.dark_mode : Icons.light_mode,
                                 size: 26,
-                                color: Color(0xFF6b7280),
+                                color: const Color(0xFF6b7280),
                               ),
                               const SizedBox(width: 18),
-                              const Text(
-                                'Logout',
-                                style: TextStyle(
+                              Text(
+                                _isDarkTheme ? 'Dark Theme' : 'Light Theme',
+                                style: const TextStyle(
                                   fontSize: 19,
                                   fontWeight: FontWeight.w700,
                                   color: Color(0xFF6b7280),

@@ -747,27 +747,23 @@ class _MessagesPageState extends State<MessagesPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                group['name'] as String,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF262626)),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Text(
-                              group['time'] as String,
-                              style: const TextStyle(fontSize: 12, color: Color(0xFF8E8E8E), fontWeight: FontWeight.w500),
-                            ),
-                          ],
+                        Text(
+                          group['name'] as String,
+                          style: const TextStyle(
+                            fontSize: 17, 
+                            fontWeight: FontWeight.w700, 
+                            color: Color(0xFF1F2937),
+                            letterSpacing: 0.2,
+                          ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
                         Text(
                           group['lastMessage'] as String,
-                          style: const TextStyle(fontSize: 14, color: Color(0xFF262626)),
+                          style: const TextStyle(
+                            fontSize: 15, 
+                            color: Color(0xFF1F2937), 
+                            fontWeight: FontWeight.w400
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -776,23 +772,43 @@ class _MessagesPageState extends State<MessagesPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
+                // Right side: time and unread count
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                                    if ((group['unread'] as int) > 0) ...
-                                    
-                                  [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: const BoxDecoration(color: Color(0xFF667EEA), shape: BoxShape.circle),
-                    child: Text(
-                      group['unread'].toString(),
-                      style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                    Text(
+                      group['time'] as String,
+                      style: const TextStyle(
+                        fontSize: 13, 
+                        color: Color(0xFF9CA3AF), 
+                        fontWeight: FontWeight.w500
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-
-
+                    const SizedBox(height: 12),
+                    if ((group['unread'] as int) > 0) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF667EEA),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF667EEA).withValues(alpha: 0.3),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          group['unread'].toString(),
+                          style: const TextStyle(
+                            color: Colors.white, 
+                            fontSize: 12, 
+                            fontWeight: FontWeight.w700
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -1104,7 +1120,12 @@ class _MessagesPageState extends State<MessagesPage> {
                       children: [
                         Text(
                           channel['name'] as String,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF262626)),
+                          style: const TextStyle(
+                            fontSize: 17, 
+                            fontWeight: FontWeight.w700, 
+                            color: Color(0xFF1F2937),
+                            letterSpacing: 0.2,
+                          ),
                         ),
                         if (channel['verified'] as bool) ...[
                           const SizedBox(width: 4),
@@ -1116,10 +1137,14 @@ class _MessagesPageState extends State<MessagesPage> {
                         ],
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     Text(
                       channel['lastPost'] as String,
-                      style: const TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+                      style: const TextStyle(
+                        fontSize: 15, 
+                        color: Color(0xFF1F2937), 
+                        fontWeight: FontWeight.w400
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1132,21 +1157,32 @@ class _MessagesPageState extends State<MessagesPage> {
                 children: [
                   Text(
                     channel['time'] as String,
-                    style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+                    style: const TextStyle(
+                      fontSize: 13, 
+                      color: Color(0xFF9CA3AF), 
+                      fontWeight: FontWeight.w500
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFF10B981),
                       shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Text(
                       '${(channel['unread'] ?? 0).toString()}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -1195,7 +1231,12 @@ class _MessagesPageState extends State<MessagesPage> {
                         children: [
                           Text(
                             channel['name'] as String,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF262626)),
+                            style: const TextStyle(
+                              fontSize: 17, 
+                              fontWeight: FontWeight.w700, 
+                              color: Color(0xFF1F2937),
+                              letterSpacing: 0.2,
+                            ),
                           ),
                           if (channel['verified'] as bool) ...[
                             const SizedBox(width: 4),
@@ -1207,17 +1248,25 @@ class _MessagesPageState extends State<MessagesPage> {
                           ],
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 8),
                       Text(
                         channel['lastPost'] as String,
-                        style: const TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+                        style: const TextStyle(
+                          fontSize: 15, 
+                          color: Color(0xFF1F2937), 
+                          fontWeight: FontWeight.w400
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 8),
                       Text(
                         channel['time'] as String,
-                        style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+                        style: const TextStyle(
+                          fontSize: 13, 
+                          color: Color(0xFF9CA3AF), 
+                          fontWeight: FontWeight.w500
+                        ),
                       ),
                     ],
                   ),
@@ -1248,14 +1297,16 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   Widget _buildChannelMessages() {
-    // Mock channel messages - these are broadcast messages from the channel
+    // Mock channel messages with different content types
     final channelMessages = [
       {
         'sender': 'Tech News Daily',
-        'text': '🚀 Breaking: New AI breakthrough announced! Researchers have developed a revolutionary language model that can understand context better than ever before. This could change how we interact with technology.',
+        'text': '🚀 Breaking: New AI breakthrough announced! Researchers have developed a revolutionary language model that can understand context better than ever before. This could change how we interact with technology. The model, called GPT-5, shows unprecedented capabilities in reasoning, problem-solving, and creative tasks. Early tests indicate it can outperform humans in many cognitive tasks while maintaining ethical boundaries.',
         'time': '1h ago',
         'type': 'text',
         'views': '2.3K',
+        'image': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
+        'hasImage': true,
       },
       {
         'sender': 'Tech News Daily',
@@ -1263,27 +1314,34 @@ class _MessagesPageState extends State<MessagesPage> {
         'time': '3h ago',
         'type': 'text',
         'views': '1.8K',
+        'hasImage': false,
       },
       {
         'sender': 'Tech News Daily',
-        'text': '💻 The future of computing: Quantum computers are getting closer to practical applications. Here\'s what you need to know about this revolutionary technology.',
+        'text': '💻 The future of computing: Quantum computers are getting closer to practical applications. Here\'s what you need to know about this revolutionary technology that will transform cryptography, drug discovery, and complex simulations.',
         'time': '6h ago',
-        'type': 'text',
+        'type': 'video',
         'views': '3.1K',
+        'videoThumbnail': 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=600&fit=crop',
+        'videoDuration': '2:45',
+        'hasVideo': true,
       },
       {
         'sender': 'Tech News Daily',
-        'text': '🔒 Cybersecurity alert: New phishing attacks targeting tech companies. Always verify email sources and never click suspicious links.',
+        'text': '🔒 Cybersecurity alert: New phishing attacks targeting tech companies. Always verify email sources and never click suspicious links. These sophisticated attacks use AI-generated content to bypass traditional detection methods.',
         'time': '1d ago',
         'type': 'text',
         'views': '4.2K',
+        'hasImage': false,
       },
       {
         'sender': 'Tech News Daily',
-        'text': '🌐 Web3 revolution: How blockchain technology is reshaping the internet. From DeFi to NFTs, the future is decentralized.',
+        'text': '🌐 Web3 revolution: How blockchain technology is reshaping the internet. From DeFi to NFTs, the future is decentralized. This comprehensive guide covers everything from smart contracts to decentralized autonomous organizations (DAOs) and the metaverse.',
         'time': '2d ago',
         'type': 'text',
         'views': '5.7K',
+        'image': 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=600&fit=crop',
+        'hasImage': true,
       },
     ];
 
@@ -1293,7 +1351,7 @@ class _MessagesPageState extends State<MessagesPage> {
       itemBuilder: (context, index) {
         final message = channelMessages[index];
         return Container(
-          margin: const EdgeInsets.only(bottom: 16),
+          margin: const EdgeInsets.only(bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1356,25 +1414,44 @@ class _MessagesPageState extends State<MessagesPage> {
                 ],
               ),
               const SizedBox(height: 12),
-              // Message content
+              // Message content container
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: const Color(0xFFE5E7EB),
                     width: 1,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  message['text'] as String,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFF262626),
-                    height: 1.4,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text content with expandable functionality
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: _buildExpandableText(message['text'] as String),
+                    ),
+                    // Media content (image or video)
+                    if (message['hasImage'] == true) ...[
+                      const Divider(height: 1, color: Color(0xFFE5E7EB)),
+                      _buildImageContent(message['image'] as String),
+                    ] else if (message['hasVideo'] == true) ...[
+                      const Divider(height: 1, color: Color(0xFFE5E7EB)),
+                      _buildVideoContent(
+                        message['videoThumbnail'] as String,
+                        message['videoDuration'] as String,
+                      ),
+                    ],
+                  ],
                 ),
               ),
               const SizedBox(height: 8),
@@ -1409,6 +1486,184 @@ class _MessagesPageState extends State<MessagesPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildExpandableText(String text) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final TextSpan textSpan = TextSpan(
+          text: text,
+          style: const TextStyle(
+            fontSize: 15,
+            color: Color(0xFF262626),
+            height: 1.4,
+          ),
+        );
+        
+        final TextPainter textPainter = TextPainter(
+          text: textSpan,
+          textDirection: TextDirection.ltr,
+          maxLines: 3,
+        );
+        textPainter.layout(maxWidth: constraints.maxWidth - 32); // Account for padding
+        
+        if (textPainter.didExceedMaxLines) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              bool isExpanded = false;
+              
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF262626),
+                      height: 1.4,
+                    ),
+                    maxLines: isExpanded ? null : 3,
+                    overflow: isExpanded ? null : TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isExpanded = !isExpanded;
+                      });
+                    },
+                    child: Text(
+                      isExpanded ? 'Show less' : 'Read more',
+                      style: const TextStyle(
+                        color: Color(0xFF667EEA),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          return Text(
+            text,
+            style: const TextStyle(
+              fontSize: 15,
+              color: Color(0xFF262626),
+              height: 1.4,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildImageContent(String imageUrl) {
+    return Container(
+      width: double.infinity,
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+        ),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: const Color(0xFFF3F4F6),
+              child: const Icon(
+                Icons.image_not_supported,
+                color: Color(0xFF9CA3AF),
+                size: 48,
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVideoContent(String thumbnailUrl, String duration) {
+    return Container(
+      width: double.infinity,
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.network(
+              thumbnailUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: const Color(0xFFF3F4F6),
+                  child: const Icon(
+                    Icons.videocam_off,
+                    color: Color(0xFF9CA3AF),
+                    size: 48,
+                  ),
+                );
+              },
+            ),
+            // Play button overlay
+            Center(
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.7),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+            // Duration badge
+            Positioned(
+              bottom: 12,
+              right: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  duration,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -1469,17 +1724,16 @@ class _MessagesPageState extends State<MessagesPage> {
                         Text(
                           conversation['name'], 
                           style: const TextStyle(
-                            fontSize: 17, 
-                            fontWeight: FontWeight.w700, 
-                            color: Color(0xFF1F2937),
-                            letterSpacing: 0.2,
+                            fontSize: 16, 
+                            fontWeight: FontWeight.w600, 
+                            color: Color(0xFF262626),
                           )
                         ),
                         Text(
                           conversation['time'], 
                           style: const TextStyle(
-                            fontSize: 13, 
-                            color: Color(0xFF9CA3AF), 
+                            fontSize: 12, 
+                            color: Color(0xFF8E8E8E), 
                             fontWeight: FontWeight.w500
                           )
                         ),
@@ -1501,10 +1755,9 @@ class _MessagesPageState extends State<MessagesPage> {
                                 )
                               : Text(
                                   conversation['lastMessage'], 
-                                  style: TextStyle(
-                                    fontSize: 15, 
-                                    color: conversation['unread'] > 0 ? const Color(0xFF1F2937) : const Color(0xFF6B7280), 
-                                    fontWeight: conversation['unread'] > 0 ? FontWeight.w500 : FontWeight.w400
+                                  style: const TextStyle(
+                                    fontSize: 14, 
+                                    color: Color(0xFF262626),
                                   ), 
                                   maxLines: 1, 
                                   overflow: TextOverflow.ellipsis
@@ -1529,8 +1782,8 @@ class _MessagesPageState extends State<MessagesPage> {
                               conversation['unread'].toString(), 
                               style: const TextStyle(
                                 color: Colors.white, 
-                                fontSize: 12, 
-                                fontWeight: FontWeight.w700
+                                fontSize: 11, 
+                                fontWeight: FontWeight.w600
                               )
                             ),
                           ),
@@ -1596,15 +1849,34 @@ class _MessagesPageState extends State<MessagesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(message['text'], style: TextStyle(fontSize: 14, color: isMe ? Colors.white : const Color(0xFF262626))),
+                  Text(
+                    message['text'], 
+                    style: TextStyle(
+                      fontSize: 15, 
+                      color: isMe ? Colors.white : const Color(0xFF262626),
+                      height: 1.4,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(message['time'], style: TextStyle(fontSize: 11, color: isMe ? Colors.white.withOpacity(0.7) : const Color(0xFF6B7280).withOpacity(0.7))),
+                      Text(
+                        message['time'], 
+                        style: TextStyle(
+                          fontSize: 12, 
+                          color: isMe ? Colors.white.withOpacity(0.7) : const Color(0xFF9CA3AF),
+                        ),
+                      ),
                       if (isMe) ...[
                         const SizedBox(width: 4),
-                        Text(message['status'] == 'read' ? '✓✓' : '✓', style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.7))),
+                        Text(
+                          message['status'] == 'read' ? '✓✓' : '✓', 
+                          style: TextStyle(
+                            fontSize: 12, 
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
                       ],
                     ],
                   ),
