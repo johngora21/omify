@@ -69,7 +69,7 @@ class _MessagesPageState extends State<MessagesPage> {
   Map<String, dynamic>? _getActiveConversation() {
     if (_activeChat == null) return null;
     try {
-      return _conversations.firstWhere((conv) => conv['id'] == _activeChat);
+    return _conversations.firstWhere((conv) => conv['id'] == _activeChat);
     } catch (e) {
       // Return null if conversation not found (e.g., for channels)
       return null;
@@ -127,7 +127,7 @@ class _MessagesPageState extends State<MessagesPage> {
             leading: Container(
               margin: const EdgeInsets.all(8),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                    color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
@@ -159,17 +159,17 @@ class _MessagesPageState extends State<MessagesPage> {
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: Center(
+                          child: Center(
                               child: Text(
                                 _activeChat.toString().replaceFirst('channel_', '')[0].toUpperCase(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                ),
                               ),
                             ),
                           ),
+                        ),
                           const SizedBox(width: 12),
                           Text(
                             _activeChat.toString().replaceFirst('channel_', ''),
@@ -182,15 +182,15 @@ class _MessagesPageState extends State<MessagesPage> {
                         ],
                       )
                     : Row(
-                    children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
                           ),
-                          shape: BoxShape.circle,
+                            shape: BoxShape.circle,
                         ),
                         child: Center(
                           child: Text(
@@ -205,13 +205,13 @@ class _MessagesPageState extends State<MessagesPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Text(
+                        const SizedBox(width: 12),
+                              Text(
                         _activeChat.toString().startsWith('group_')
                             ? _activeChat.toString().replaceFirst('group_', '')
                             : _getActiveConversation()?['name'] ?? '',
-                        style: const TextStyle(
-                          color: Color(0xFF262626),
+                                style: const TextStyle(
+                                  color: Color(0xFF262626),
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -220,7 +220,7 @@ class _MessagesPageState extends State<MessagesPage> {
                   )
                 : const Text(
                     'Messages',
-                    style: TextStyle(
+                                  style: TextStyle(
                       color: Color(0xFF262626),
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -258,13 +258,13 @@ class _MessagesPageState extends State<MessagesPage> {
                           Icon(Icons.notifications_off, color: Color(0xFF667EEA)),
                           SizedBox(width: 12),
                           Text('Mute notifications'),
-                        ],
-                      ),
-                    ),
+                            ],
+                          ),
+                        ),
                     const PopupMenuItem<String>(
                       value: 'follow',
                       child: Row(
-                        children: [
+                          children: [
                           Icon(Icons.person_add, color: Color(0xFF667EEA)),
                           SizedBox(width: 12),
                           Text('Follow channel'),
@@ -280,9 +280,9 @@ class _MessagesPageState extends State<MessagesPage> {
                           Text('Report channel'),
                         ],
                       ),
-                    ),
-                  ],
-                ),
+                            ),
+                          ],
+                        ),
               ] else if (_activeChat != null) ...[
                 // Individual/Group chat actions: call and video call
                 IconButton(onPressed: () {}, icon: const Icon(Icons.call, color: Color(0xFF667EEA))),
@@ -310,9 +310,9 @@ class _MessagesPageState extends State<MessagesPage> {
                           Icon(Icons.person_add, color: Color(0xFF667EEA)),
                           SizedBox(width: 12),
                           Text('Select Contact'),
-                        ],
-                      ),
+                      ],
                     ),
+                  ),
                     const PopupMenuItem<String>(
                       value: 'create_group',
                       child: Row(
@@ -340,49 +340,49 @@ class _MessagesPageState extends State<MessagesPage> {
           ),
           body: Column(
             children: [
-              if (_activeChat == null) ...[
-                // Search Bar
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEFEFEF),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: TextField(
-                      onChanged: (value) => setState(() => _searchQuery = value),
-                      decoration: const InputDecoration(
-                        hintText: 'Search messages...',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        prefixIcon: Icon(Icons.search, color: Color(0xFF8E8E8E), size: 16),
+                if (_activeChat == null) ...[
+                  // Search Bar
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFEFEF),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: TextField(
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                        decoration: const InputDecoration(
+                          hintText: 'Search messages...',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          prefixIcon: Icon(Icons.search, color: Color(0xFF8E8E8E), size: 16),
+                        ),
                       ),
                     ),
                   ),
-                ),
 
                 // Tab Navigation
                 Row(
-                  children: [
-                    _buildTab('conversations', 'Messages'),
-                    _buildTab('groups', 'Groups', badge: 1),
-                    _buildTab('requests', 'Requests', badge: 2),
+                        children: [
+                          _buildTab('conversations', 'Messages'),
+                          _buildTab('groups', 'Groups', badge: 1),
+                          _buildTab('requests', 'Requests', badge: 2),
                     _buildTab('channels', 'Channels', badge: 3),
-                  ],
-                ),
+                        ],
+                  ),
 
-                // Content based on active tab
-                Expanded(
-                  child: _activeTab == 'conversations' 
-                      ? _buildConversationsList()
-                      : _activeTab == 'groups'
-                          ? _buildGroupsList()
+                  // Content based on active tab
+                  Expanded(
+                    child: _activeTab == 'conversations' 
+                        ? _buildConversationsList()
+                        : _activeTab == 'groups'
+                            ? _buildGroupsList()
                           : _activeTab == 'requests'
                               ? _buildRequestsList()
                               : _buildChannelsList(),
-                ),
-              ] else ...[
+                  ),
+                ] else ...[
                 // Check if it's a group chat, individual chat, or channel
                 if (_activeChat.toString().startsWith('group_')) ...[
                   // Group Chat Messages
@@ -402,7 +402,7 @@ class _MessagesPageState extends State<MessagesPage> {
               ],
             
             
-            ],
+              ],
           ),
         ),
         
@@ -493,10 +493,10 @@ class _MessagesPageState extends State<MessagesPage> {
                 const SizedBox(width: 8),
               ],
               Flexible(
-                child: Container(
+      child: Container(
                   constraints: const BoxConstraints(maxWidth: 250),
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
+        decoration: BoxDecoration(
                     color: message['isMe'] as bool ? const Color(0xFF667EEA) : const Color(0xFFF0F0F0),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -544,13 +544,13 @@ class _MessagesPageState extends State<MessagesPage> {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
+        child: Row(
+          children: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.palette, color: Color(0xFF667EEA))),
           IconButton(onPressed: () {}, icon: const Icon(Icons.image_outlined, color: Color(0xFF667EEA))),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+                decoration: BoxDecoration(
                 border: Border.all(color: const Color(0xFFDBDBDB)),
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -705,8 +705,8 @@ class _MessagesPageState extends State<MessagesPage> {
         return Container(
           color: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Row(
-            children: [
+            child: Row(
+              children: [
               // Group profile picture - taps to group details
               GestureDetector(
                 onTap: () {
@@ -733,9 +733,9 @@ class _MessagesPageState extends State<MessagesPage> {
                       group['avatar'] as String,
                       style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                     ),
+                    ),
                   ),
                 ),
-              ),
                 const SizedBox(width: 12),
                 // Conversation area - taps to open group chat
                 Expanded(
@@ -744,11 +744,11 @@ class _MessagesPageState extends State<MessagesPage> {
                       // Open group chat
                       setState(() => _activeChat = 'group_${group['name']}');
                     },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                         Text(
-                          group['name'] as String,
+                              group['name'] as String,
                           style: const TextStyle(
                             fontSize: 17, 
                             fontWeight: FontWeight.w700, 
@@ -757,21 +757,21 @@ class _MessagesPageState extends State<MessagesPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
+                          Text(
                           group['lastMessage'] as String,
                           style: const TextStyle(
                             fontSize: 15, 
                             color: Color(0xFF1F2937), 
                             fontWeight: FontWeight.w400
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
+                ),
+                  const SizedBox(width: 8),
                 // Right side: time and unread count
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -786,7 +786,7 @@ class _MessagesPageState extends State<MessagesPage> {
                     ),
                     const SizedBox(height: 12),
                     if ((group['unread'] as int) > 0) ...[
-                      Container(
+                  Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: const Color(0xFF667EEA),
@@ -799,22 +799,22 @@ class _MessagesPageState extends State<MessagesPage> {
                             ),
                           ],
                         ),
-                        child: Text(
-                          group['unread'].toString(),
+                    child: Text(
+                      group['unread'].toString(),
                           style: const TextStyle(
                             color: Colors.white, 
                             fontSize: 12, 
                             fontWeight: FontWeight.w700
                           ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ],
             ),
-          );
-        },
+              ],
+          ),
+        );
+      },
   
     );
     
@@ -1078,13 +1078,13 @@ class _MessagesPageState extends State<MessagesPage> {
         } else if (index < followedChannels.length) {
           // Followed channels (first 4)
           final channel = followedChannels[index];
-          return GestureDetector(
+    return GestureDetector(
           onTap: () {
             // Open channel to view content
             setState(() => _activeChat = 'channel_${channel['name']}');
           },
-          child: Container(
-          color: Colors.white,
+      child: Container(
+        color: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Row(
             children: [
@@ -1627,10 +1627,10 @@ class _MessagesPageState extends State<MessagesPage> {
             ),
             // Play button overlay
             Center(
-              child: Container(
+        child: Container(
                 width: 60,
                 height: 60,
-                decoration: BoxDecoration(
+          decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.7),
                   shape: BoxShape.circle,
                 ),
@@ -1649,7 +1649,7 @@ class _MessagesPageState extends State<MessagesPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.8),
-                  borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   duration,
@@ -1673,7 +1673,7 @@ class _MessagesPageState extends State<MessagesPage> {
       child: Container(
         color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
+          child: Row(
             children: [
               Container(
                 margin: const EdgeInsets.only(right: 16),
@@ -1980,13 +1980,13 @@ class _MessagesPageState extends State<MessagesPage> {
             ),
           ),
           title: Row(
-            children: [
-              Container(
+          children: [
+            Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -1999,14 +1999,14 @@ class _MessagesPageState extends State<MessagesPage> {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
+                  const Text(
                 'Omify AI',
-                style: TextStyle(
+                    style: TextStyle(
                   color: Color(0xFF262626),
                   fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
             ],
           ),
           actions: [
@@ -2029,9 +2029,9 @@ class _MessagesPageState extends State<MessagesPage> {
                       Icon(Icons.person_add, color: Color(0xFF667EEA)),
                       SizedBox(width: 12),
                       Text('Select Contact'),
-                    ],
-                  ),
-                ),
+                ],
+              ),
+            ),
                 const PopupMenuItem<String>(
                   value: 'create_group',
                   child: Row(

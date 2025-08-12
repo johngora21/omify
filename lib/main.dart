@@ -35,8 +35,19 @@ import './pages/escort_registration_page.dart';
 import './pages/group_details_page.dart';
 import './pages/post_details_page.dart';
 import './pages/service_form_page.dart';
+import './services/database_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Test database connection
+  try {
+    await DatabaseService.instance.testConnection();
+    print('🚀 Database connection test completed successfully!');
+  } catch (e) {
+    print('❌ Database connection test failed: $e');
+  }
+  
   runApp(const OmifyApp());
 }
 
