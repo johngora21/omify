@@ -482,7 +482,7 @@ class EroticPageState extends State<EroticPage> {
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF3B82F6),
+                                color: const Color(0xFF667EEA),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(
@@ -568,7 +568,7 @@ class EroticPageState extends State<EroticPage> {
             Icon(
               icon,
               size: 16,
-              color: isActive ? const Color(0xFF3B82F6) : const Color(0xFF6B7280),
+              color: isActive ? const Color(0xFF667EEA) : const Color(0xFF6B7280),
             ),
             const SizedBox(width: 8),
             Text(
@@ -648,7 +648,7 @@ class EroticPageState extends State<EroticPage> {
                           ),
                           if (provider['verified']) ...[
                             const SizedBox(width: 8),
-                            const Icon(Icons.verified, color: Color(0xFF3B82F6), size: 16),
+                            const Icon(Icons.verified, color: Color(0xFF667EEA), size: 16),
                           ],
                         ],
                       ),
@@ -1253,10 +1253,10 @@ class EroticPageState extends State<EroticPage> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFF3F4F6),
+                                    color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFF3F4F6),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
-                                      color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFE5E7EB),
+                                      color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFE5E7EB),
                                     ),
                                   ),
                                   child: Text(
@@ -1302,10 +1302,10 @@ class EroticPageState extends State<EroticPage> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFF3F4F6),
+                                    color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFF3F4F6),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
-                                      color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFE5E7EB),
+                                      color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFE5E7EB),
                                     ),
                                   ),
                                   child: Text(
@@ -1344,10 +1344,10 @@ class EroticPageState extends State<EroticPage> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFF3F4F6),
+                                    color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFF3F4F6),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
-                                      color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFE5E7EB),
+                                      color: isSelected ? const Color(0xFF667EEA) : const Color(0xFFE5E7EB),
                                     ),
                                   ),
                                   child: Text(
@@ -1466,7 +1466,7 @@ class EroticPageState extends State<EroticPage> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF3B82F6),
+                            color: const Color(0xFF667EEA),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Text(
@@ -1621,7 +1621,7 @@ class EroticPageState extends State<EroticPage> {
           Checkbox(
             value: value,
             onChanged: (newValue) => onChanged(newValue ?? false),
-            activeColor: const Color(0xFF3B82F6),
+                                      activeColor: const Color(0xFF667EEA),
           ),
           Text(
             label,

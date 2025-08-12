@@ -361,7 +361,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF3B82F6),
+                        color: const Color(0xFF667EEA),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
@@ -443,7 +443,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                                     width: 60,
                                     height: 60,
                                     decoration: BoxDecoration(
-                                      color: _isRecording ? const Color(0xFFEF4444) : const Color(0xFF3B82F6),
+                                      color: _isRecording ? const Color(0xFFEF4444) : const Color(0xFF667EEA),
                                       shape: BoxShape.circle,
                                       border: Border.all(color: Colors.white, width: 4),
                                     ),

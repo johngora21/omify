@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:go_router/go_router.dart';
 
 class EntertainmentPage extends StatefulWidget {
   const EntertainmentPage({super.key});
@@ -500,40 +501,32 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: const Color(0xFFF8F9FA),
+          backgroundColor: const Color(0xFF000000),
           body: SafeArea(
             child: Column(
               children: [
-                // Tab Navigation
+                // Netflix-style Header
                 Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  child: const Row(
                       children: [
-                        _buildTab('popular', 'Popular'),
-                        _buildTab('top-rated', 'Top Rated'),
-                        _buildTab('now-playing', 'Now Playing'),
-                        _buildTab('upcoming', 'Upcoming'),
-                        _buildTab('sports', 'Sports'),
-                      ],
-                    ),
+                      Spacer(),
+                    ],
                   ),
                 ),
-                
-                // Search and Filter Bar
+
+                // Search Bar and Filter
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: Row(
                     children: [
-                      // Search Input
+                      // Search Bar
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFFE5E7EB)),
-                            borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
+                            border: Border.all(color: const Color(0xFF333333)),
+                            borderRadius: BorderRadius.circular(8),
+                            color: const Color(0xFF1A1A1A),
                           ),
                           child: Row(
                             children: [
@@ -548,8 +541,10 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                               Expanded(
                                 child: TextField(
                                   onChanged: (value) => setState(() => _searchQuery = value),
+                                  style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     hintText: _getSearchHint(),
+                                    hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
                                   ),
@@ -559,15 +554,14 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
               ),
             ),
           ),
-
-                      const SizedBox(width: 12),
                       
                       // Filter Button
+                        const SizedBox(width: 12),
                           Container(
                         padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                          color: const Color(0xFF3B82F6),
-                          borderRadius: BorderRadius.circular(12),
+                            color: const Color(0xFF667EEA),
+                            borderRadius: BorderRadius.circular(8),
                         ),
                         child: GestureDetector(
                           onTap: () => setState(() => _showFilterModal = true),
@@ -578,36 +572,377 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                           ),
                         ),
                       ),
-                      
-                      // Removed bookmark button
                     ],
+                  ),
+                ),
+                
+                // Netflix-style Tab Navigation
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildNetflixTab('popular', 'Popular'),
+                        _buildNetflixTab('top-rated', 'Top Rated'),
+                        _buildNetflixTab('now-playing', 'Now Playing'),
+                        _buildNetflixTab('upcoming', 'Upcoming'),
+                        _buildNetflixTab('sports', 'Sports'),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Netflix-style Content Rows
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    children: [
+                      // Featured Section
+                      _buildNetflixRow('', _getFilteredContent().take(6).toList(), isFeatured: true),
+                      const SizedBox(height: 30),
+                      
+                      // Popular Section
+                      _buildNetflixRow('Popular Now', _getFilteredContent().take(6).toList()),
+                      const SizedBox(height: 30),
+                      
+                      // Top Rated Section
+                      _buildNetflixRow('Top Rated', _getFilteredContent().take(6).toList()),
+                      const SizedBox(height: 30),
+                      
+                      // Sports Section
+                      _buildNetflixRow('Live Sports', _getFilteredContent().where((item) => 
+                        item.containsKey('teamA') && item.containsKey('teamB')).take(6).toList()),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
+        ),
+        if (_showFilterModal) _buildFilterModal(),
+      ],
+    );
+  }
 
-          // Content Grid
-                Expanded(
+  Widget _buildNetflixTab(String id, String label) {
+    final isActive = _activeTab == id;
+    return GestureDetector(
+      onTap: () => setState(() => _activeTab = id),
                   child: Container(
-            padding: const EdgeInsets.all(16),
-                    child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                        childAspectRatio: 0.6,
-                      ),
-                      itemCount: _getFilteredContent().length,
+        margin: const EdgeInsets.only(right: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Colors.white : const Color(0xFF999999),
+            fontSize: 16,
+            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNetflixRow(String title, List<Map<String, dynamic>> items, {bool isFeatured = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Title
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        // Horizontal Scrolling Content
+        SizedBox(
+          height: isFeatured ? 400 : 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: items.length,
                       itemBuilder: (context, index) {
-                        return _buildContentCard(_getFilteredContent()[index]);
+              final item = items[index];
+              return Container(
+                width: isFeatured ? 280 : 140,
+                margin: const EdgeInsets.only(right: 12),
+                child: _buildNetflixCard(item, isFeatured: isFeatured),
+              );
                       },
               ),
             ),
+      ],
+    );
+  }
+
+  Widget _buildNetflixCard(Map<String, dynamic> item, {bool isFeatured = false}) {
+    // Check if this is sports content
+    if (item.containsKey('teamA') && item.containsKey('teamB')) {
+      return _buildNetflixSportsCard(item, isFeatured: isFeatured);
+    }
+    
+    // Regular movie content
+    return _buildNetflixMovieCard(item, isFeatured: isFeatured);
+  }
+
+  Widget _buildNetflixMovieCard(Map<String, dynamic> movie, {bool isFeatured = false}) {
+    return GestureDetector(
+      onTap: () => _handleMovieClick(movie['id']),
+      child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Stack(
+          children: [
+            // Movie Image
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFF333333),
+              ),
+              child: Stack(
+                children: [
+                  // Placeholder for movie image
+                  const Center(
+                    child: Icon(
+                      Icons.movie,
+                      size: 40,
+                      color: Color(0xFF666666),
+                    ),
+                  ),
+                  
+                  // Rating badge
+                  Positioned(
+                    bottom: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Color(0xFFFBBF24),
+                            size: 10,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            movie['rating'].toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  
+                  // Trending badge
+                  if (movie['isTrending'])
+                    Positioned(
+                      top: 6,
+                      left: 6,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF667EEA),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          'TRENDING',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            
+            // Gradient overlay for text
+            if (isFeatured)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black,
+                      ],
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        movie['title'],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${movie['year']} • ${movie['duration']}',
+                        style: const TextStyle(
+                          color: Color(0xFFCCCCCC),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    ));
+  }
+
+  void _handleMovieClick(String movieId) {
+    // Navigate to movie details page
+    context.go('/movie/$movieId');
+  }
+
+  Widget _buildNetflixSportsCard(Map<String, dynamic> match, {bool isFeatured = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+          ),
+          child: Stack(
+            children: [
+              // Sport icon
+              const Center(
+                child: Icon(
+                  Icons.sports_soccer,
+                  size: 40,
+                  color: Color(0xFF666666),
+                ),
+              ),
+              
+              // Live indicator
+              Positioned(
+                top: 6,
+                left: 6,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE50914),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text(
+                    'LIVE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 8,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              
+              // Teams info
+              if (isFeatured)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.7),
+                          Colors.black,
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${match['teamA']} vs ${match['teamB']}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          match['sport'] ?? 'Football',
+                          style: const TextStyle(
+                            color: Color(0xFFCCCCCC),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
-        _buildFilterModal(),
-      ],
+      ),
     );
   }
 
@@ -619,13 +954,13 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
         margin: const EdgeInsets.only(right: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF3B82F6) : Colors.transparent,
+          color: isActive ? const Color(0xFF3B82F6) : const Color(0xFF333333),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isActive ? Colors.white : const Color(0xFF6B7280),
+            color: isActive ? Colors.white : const Color(0xFFCCCCCC),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -675,11 +1010,11 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
 
     return Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF1A1A1A),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -883,7 +1218,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                            colors: [Color(0xFF667EEA), Color(0xFF5B21B6)],
                         ),
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -911,11 +1246,11 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
   Widget _buildMovieCard(Map<String, dynamic> movie) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF1A1A1A),
                           borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -930,7 +1265,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: const Color(0xFF333333),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
@@ -942,7 +1277,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                     child: Icon(
                       Icons.movie,
                       size: 40,
-                      color: Colors.grey,
+                      color: Color(0xFF666666),
                     ),
                   ),
                   
@@ -986,7 +1321,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF3B82F6),
+                          color: const Color(0xFF667EEA),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -1017,7 +1352,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: Colors.white,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -1027,7 +1362,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                     '${movie['year']} • ${movie['duration']} • ${movie['genre']}',
                       style: const TextStyle(
                       fontSize: 11,
-                      color: Color(0xFF6B7280),
+                      color: Color(0xFFCCCCCC),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1038,7 +1373,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       movie['description'],
                       style: const TextStyle(
                         fontSize: 10,
-                        color: Color(0xFF6B7280),
+                        color: Color(0xFFCCCCCC),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1052,7 +1387,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                              colors: [Color(0xFF667EEA), Color(0xFF5B21B6)],
                             ),
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -1288,13 +1623,14 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
     if (!_showFilterModal) return const SizedBox.shrink();
     
     return Container(
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.7),
       child: Center(
         child: Container(
           margin: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFF1A1A1A),
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF333333)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1304,7 +1640,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                    bottom: BorderSide(color: Color(0xFF333333)),
                   ),
                 ),
                 child: Row(
@@ -1315,7 +1651,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
+                        color: Colors.white,
                       ),
                     ),
                     GestureDetector(
@@ -1323,7 +1659,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       child: const Icon(
                         Icons.close,
                         size: 24,
-                        color: Color(0xFF6B7280),
+                        color: Color(0xFFCCCCCC),
                       ),
                     ),
                   ],
@@ -1462,10 +1798,21 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                             children: [
                               Expanded(
                                 child: TextField(
+                                  style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: 'From',
+                                    labelStyle: const TextStyle(color: Color(0xFFCCCCCC)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF555555)),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF555555)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF667EEA)),
                                     ),
                                   ),
                                   keyboardType: TextInputType.number,
@@ -1479,10 +1826,21 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: TextField(
+                                  style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: 'To',
+                                    labelStyle: const TextStyle(color: Color(0xFFCCCCCC)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF555555)),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF555555)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(color: Color(0xFF667EEA)),
                                     ),
                                   ),
                                   keyboardType: TextInputType.number,
@@ -1528,7 +1886,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Color(0xFFE5E7EB)),
+                    top: BorderSide(color: Color(0xFF333333)),
                   ),
                 ),
                 child: Row(
@@ -1538,6 +1896,8 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                         onPressed: _resetFilters,
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12),
+                          foregroundColor: const Color(0xFFCCCCCC),
+                          side: const BorderSide(color: Color(0xFF555555)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -1550,7 +1910,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
                       child: ElevatedButton(
                         onPressed: _applyFilters,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3B82F6),
+                          backgroundColor: const Color(0xFF667EEA),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -1581,7 +1941,7 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A1A),
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
@@ -1596,16 +1956,16 @@ class _EntertainmentPageState extends State<EntertainmentPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF3B82F6) : Colors.white,
+          color: isSelected ? const Color(0xFF667EEA) : const Color(0xFF333333),
           border: Border.all(
-            color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFE5E7EB),
+            color: isSelected ? const Color(0xFF667EEA) : const Color(0xFF555555),
           ),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : const Color(0xFF6B7280),
+            color: isSelected ? Colors.white : const Color(0xFFCCCCCC),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),

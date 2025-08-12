@@ -11,9 +11,28 @@ import './pages/reels_page.dart';
 import './pages/entertainment_page.dart';
 import './pages/create_post_page.dart';
 import './components/bottom_nav.dart';
+import './components/sidebar.dart';
 import './pages/notifications_page.dart';
 import './pages/messages_page.dart';
 import './pages/explore_page.dart';
+import './pages/discover_page.dart';
+import './pages/movies_page.dart';
+import './pages/movie_watch_page.dart';
+import './pages/bookmarks_page.dart';
+import './pages/premium_page.dart';
+import './pages/settings_page.dart';
+import './pages/profile_page.dart';
+import './pages/edit_profile_page.dart';
+import './pages/professional_page.dart';
+import './pages/erotic_registration_page.dart';
+import './pages/accommodation_registration_page.dart';
+import './pages/adventure_registration_page.dart';
+import './pages/car_rental_registration_page.dart';
+import './pages/registration_submitted_page.dart';
+import './pages/dating_registration_page.dart';
+import './pages/massage_registration_page.dart';
+import './pages/escort_registration_page.dart';
+import './pages/group_details_page.dart';
 
 void main() {
   runApp(const OmifyApp());
@@ -65,10 +84,91 @@ class OmifyApp extends StatelessWidget {
           path: '/messages',
           builder: (context, state) => const MessagesPage(),
         ),
+        GoRoute(
+          path: '/group/:id',
+          builder: (context, state) {
+            final groupId = state.pathParameters['id']!;
+            final groupName = state.uri.queryParameters['name'] ?? 'Group';
+            return GroupDetailsPage(
+              groupId: groupId,
+              groupName: groupName,
+            );
+          },
+        ),
 
         GoRoute(
           path: '/explore',
           builder: (context, state) => const ExplorePage(),
+        ),
+        GoRoute(
+          path: '/discover',
+          builder: (context, state) => const DiscoverPage(),
+        ),
+        GoRoute(
+          path: '/movies',
+          builder: (context, state) => const MoviesPage(),
+        ),
+        GoRoute(
+          path: '/movie/:id',
+          builder: (context, state) => MovieWatchPage(
+            movieId: state.pathParameters['id']!,
+          ),
+        ),
+        GoRoute(
+          path: '/bookmarks',
+          builder: (context, state) => const BookmarksPage(),
+        ),
+        GoRoute(
+          path: '/premium',
+          builder: (context, state) => const PremiumPage(),
+        ),
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const SettingsPage(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfilePage(),
+        ),
+        GoRoute(
+          path: '/edit-profile',
+          builder: (context, state) => const EditProfilePage(),
+        ),
+        GoRoute(
+          path: '/professional',
+          builder: (context, state) => const ProfessionalPage(),
+        ),
+        GoRoute(
+          path: '/erotic-registration',
+          builder: (context, state) => const EroticRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/accommodation-registration',
+          builder: (context, state) => const AccommodationRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/adventure-registration',
+          builder: (context, state) => const AdventureRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/car-rental-registration',
+          builder: (context, state) => const CarRentalRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/registration-submitted',
+          builder: (context, state) => const RegistrationSubmittedPage(),
+        ),
+        GoRoute(
+          path: '/dating-registration',
+          builder: (context, state) => const DatingRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/massage-registration',
+          builder: (context, state) => const MassageRegistrationPage(),
+        ),
+        GoRoute(
+          path: '/escort-registration',
+          builder: (context, state) => const EscortRegistrationPage(),
         ),
       ],
     );
@@ -149,6 +249,19 @@ class MainNavigationPage extends StatefulWidget {
 class _MainNavigationPageState extends State<MainNavigationPage> {
   final GlobalKey<EroticPageState> _eroticPageKey = GlobalKey<EroticPageState>();
   final GlobalKey<HomePageState> _homePageKey = GlobalKey<HomePageState>();
+  bool _sidebarOpen = false;
+
+  void _openSidebar() {
+    setState(() {
+      _sidebarOpen = true;
+    });
+  }
+
+  void _closeSidebar() {
+    setState(() {
+      _sidebarOpen = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,17 +288,30 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         currentPage = const MessagesPage();
         break;
       default:
-        currentPage = HomePage(key: _homePageKey);
+        currentPage = HomePage(
+          key: _homePageKey,
+          onOpenSidebar: _openSidebar,
+        );
     }
     
-    return Scaffold(
-      body: currentPage,
-      bottomNavigationBar: location == '/create' 
-          ? null 
-          : BottomNav(
-              onHomeTabPressed: () => _homePageKey.currentState?.scrollToTop(),
-              onEroticTabPressed: () => _eroticPageKey.currentState?.scrollToTop(),
-            ),
+    return Stack(
+      children: [
+        Scaffold(
+          body: currentPage,
+          bottomNavigationBar: location == '/create' 
+              ? null 
+              : BottomNav(
+                  onHomeTabPressed: () => _homePageKey.currentState?.scrollToTop(),
+                  onEroticTabPressed: () => _eroticPageKey.currentState?.scrollToTop(),
+                ),
+        ),
+        
+        // Sidebar - positioned above everything including bottom navigation
+        Sidebar(
+          isOpen: _sidebarOpen,
+          onClose: _closeSidebar,
+        ),
+      ],
     );
   }
 }

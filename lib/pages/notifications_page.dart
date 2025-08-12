@@ -103,59 +103,47 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => context.go('/'),
+            iconSize: 20,
+            padding: const EdgeInsets.all(8),
+          ),
+        ),
+        title: const Text(
+          'Notifications',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_horiz, color: Color(0xFF262626)),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: Stack(
-                children: [
-                  // Back Arrow
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () => context.go('/'),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Icon(Icons.arrow_back, size: 20, color: Color(0xFF1A1A1A)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                  // Title
-                  const Center(
-                    child: Text('Notifications', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A))),
-                  ),
-                  
-                  // Menu Button
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          child: const Icon(Icons.more_horiz, size: 20, color: Color(0xFF262626)),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             // Search Bar
             Container(
@@ -178,22 +166,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
             ),
 
-            // Tab Navigation - Horizontal scrolling
-            Container(
-              color: Colors.white,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    _buildTab('notifications', 'Notifications'),
-                    const SizedBox(width: 8),
-                    _buildTab('bookings', 'Bookings'),
-                    const SizedBox(width: 8),
-                    _buildTab('invites', 'Invites'),
-                  ],
-                ),
-              ),
+            // Tab Navigation
+            Row(
+              children: [
+                _buildTab('notifications', 'Notifications'),
+                _buildTab('bookings', 'Bookings'),
+                _buildTab('invites', 'Invites'),
+              ],
             ),
 
             // Notifications List
@@ -210,23 +189,34 @@ class _NotificationsPageState extends State<NotificationsPage> {
     );
   }
 
-  Widget _buildTab(String id, String label) {
-    final isActive = _activeTab == id;
-    return GestureDetector(
-      onTap: () => setState(() => _activeTab = id),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF0095F6) : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Colors.white : const Color(0xFF6B7280),
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+  Widget _buildTab(String tab, String label) {
+    final isActive = _activeTab == tab;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _activeTab = tab;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isActive ? const Color(0xFFf3f4f6) : Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: const Color(0xFFe5e7eb),
+                width: 1,
+              ),
+            ),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: isActive ? const Color(0xFF1a1a1a) : const Color(0xFF6b7280),
+            ),
           ),
         ),
       ),
@@ -390,7 +380,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF0095F6),
+                    color: Color(0xFF667EEA),
                   ),
                 ),
               ],
@@ -412,7 +402,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0095F6),
+                        color: const Color(0xFF667EEA),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Center(
@@ -566,7 +556,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF0095F6),
+                          color: Color(0xFF667EEA),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -607,7 +597,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0095F6),
+                        color: const Color(0xFF667EEA),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Center(
@@ -783,13 +773,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Color _getNotificationTypeColor(String type) {
     switch (type) {
       case 'like':
-        return const Color(0xFFE91E63);
+        return const Color(0xFF667EEA);
       case 'comment':
-        return const Color(0xFF2196F3);
+        return const Color(0xFF667EEA);
       case 'follow':
-        return const Color(0xFF4CAF50);
+        return const Color(0xFF667EEA);
       case 'message':
-        return const Color(0xFF9C27B0);
+        return const Color(0xFF667EEA);
       default:
         return const Color(0xFF6B7280);
     }

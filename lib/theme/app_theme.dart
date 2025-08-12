@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Exact same colors as web app
-  static const Color primaryColor = Color(0xFF0095F6);
+  static const Color primaryColor = Color(0xFF667EEA);
   static const Color primaryHoverColor = Color(0xFF1877F2);
   static const Color backgroundColor = Color(0xFFFAFAFA);
   static const Color cardColor = Color(0xFFFFFFFF);
@@ -18,7 +18,7 @@ class AppTheme {
     200: Color(0xFFBFDBFE),
     300: Color(0xFF93C5FD),
     400: Color(0xFF60A5FA),
-    500: Color(0xFF3B82F6),
+    500: Color(0xFF667EEA),
     600: Color(0xFF2563EB),
     700: Color(0xFF1D4ED8),
     800: Color(0xFF1E40AF),

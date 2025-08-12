@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import '../components/top_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:go_router/go_router.dart';
 import '../components/sidebar.dart';
-import '../types/index.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback? onOpenSidebar;
+  
+  const HomePage({super.key, this.onOpenSidebar});
 
   @override
   State<HomePage> createState() => HomePageState();
@@ -15,8 +18,6 @@ class HomePageState extends State<HomePage> {
   final Set<String> savedPosts = <String>{};
   final ScrollController _scrollController = ScrollController();
   bool _isTopBarVisible = true;
-  bool _sidebarOpen = false;
-  User? _user;
 
   final List<Map<String, dynamic>> stories = [
     {
@@ -151,41 +152,105 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void _toggleSidebar() {
-    setState(() {
-      _sidebarOpen = !_sidebarOpen;
-    });
-  }
-
-  void _closeSidebar() {
-    setState(() {
-      _sidebarOpen = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight + 20),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          height: _isTopBarVisible ? kToolbarHeight + 20 : 0,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 300),
-            opacity: _isTopBarVisible ? 1.0 : 0.0,
-            child: TopBar(
-              user: _user,
-              setUser: (user) => setState(() => _user = user),
-              onMenuClick: _toggleSidebar,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.white,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight + 20),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: _isTopBarVisible ? kToolbarHeight + 20 : 0,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: _isTopBarVisible ? 1.0 : 0.0,
+                child: Container(
+                  color: Colors.white,
+                  child: SafeArea(
+                    child: Container(
+                      height: kToolbarHeight + 20,
+                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: widget.onOpenSidebar ?? () {},
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.network(
+                                  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: ShaderMask(
+                                shaderCallback: (bounds) => const LinearGradient(
+                                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ).createShader(bounds),
+                                child: const Text(
+                                  'Omify',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontFamily: 'cursive',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const FaIcon(
+                              FontAwesomeIcons.search,
+                              color: Color(0xFF262626),
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              context.go('/explore');
+                            },
+                          ),
+                          IconButton(
+                            icon: const FaIcon(
+                              FontAwesomeIcons.heart,
+                              color: Color(0xFF262626),
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              context.go('/notifications');
+                            },
+                          ),
+                          IconButton(
+                            icon: const FaIcon(
+                              FontAwesomeIcons.facebookMessenger,
+                              color: Color(0xFF262626),
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              context.go('/messages');
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      body: Stack(
-        children: [
-          SafeArea(
+          body: SafeArea(
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
@@ -285,34 +350,12 @@ class HomePageState extends State<HomePage> {
                                             ),
                                           ],
                                         ),
+                                        padding: const EdgeInsets.all(3),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(35),
+                                          borderRadius: BorderRadius.circular(32),
                                           child: Image.network(
-                                            story['imageUrl'],
+                                            story['avatar'],
                                             fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return Container(
-                                                decoration: const BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                ),
-                                                child: const Center(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.image_not_supported,
-                                                        color: Colors.white,
-                                                        size: 24,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
                                           ),
                                         ),
                                       ),
@@ -340,27 +383,23 @@ class HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-
-                  // Posts Section
+                  
+                  // Posts Feed
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: posts.map((post) => _buildPostCard(post)).toList(),
                     ),
                   ),
+                  
+                  // Bottom padding to prevent overflow
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
           ),
-          
-          // Sidebar
-          Sidebar(
-            isOpen: _sidebarOpen,
-            onClose: _closeSidebar,
-            user: _user?.toJson(),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -493,10 +532,10 @@ class HomePageState extends State<HomePage> {
                       color: const Color(0xFFE0E0E0),
                     ),
                     child: const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
                             Icons.image_not_supported,
                             color: Color(0xFF666666),
                             size: 48,
@@ -515,76 +554,127 @@ class HomePageState extends State<HomePage> {
                   );
                 },
               ),
+              if (post['isVideo'])
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      '▶ VIDEO',
+                      style: TextStyle(
+                  color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ),
             ],
           ),
 
-          // Post Footer
+          // Post Actions
           Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+        child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  children: [
+          children: [
                     IconButton(
-                      icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: isLiked ? Colors.red : Color(0xFF666666)),
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? const Color(0xFFFF4757) : const Color(0xFF666666),
+                        size: 28,
+                      ),
                       onPressed: () => toggleLike(post['id']),
                     ),
-                    const SizedBox(width: 12),
-                    IconButton(
-                      icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_border, color: isSaved ? Colors.blue : Color(0xFF666666)),
-                      onPressed: () => toggleSave(post['id']),
+                    const SizedBox(width: 20),
+                    const Icon(
+                      Ionicons.chatbubble,
+                      color: Color(0xFF666666),
+                      size: 26,
                     ),
                   ],
                 ),
-                Text(
-                  '${post['likes']} likes',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
+                IconButton(
+                  icon: Icon(
+                    isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    color: isSaved ? const Color(0xFFFFA502) : const Color(0xFF666666),
+                    size: 28,
                   ),
+                  onPressed: () => toggleSave(post['id']),
                 ),
               ],
             ),
           ),
 
-          // Post Caption
+          // Post Info
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: Text(
-              post['caption'],
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF1A1A1A),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                  '${post['likes'] + (isLiked ? 1 : 0)} connections',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1A1A1A),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF333333),
+                      height: 1.5,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: '${post['username']} ',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: post['caption']),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                  Row(
+                    children: [
+                    Text(
+                      '${post['timeAgo']} ago',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF999999),
+                      ),
+                    ),
+                    const Text(' • '),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        post['category'],
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF666666),
+                        ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-
-          // Post Comments
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: Text(
-              'View all ${post['comments']} comments',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF888888),
-              ),
-            ),
-          ),
-
-          // Post Time Ago
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: Text(
-              post['timeAgo'],
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFF888888),
-              ),
-            ),
-          ),
-        ],
+          ],
       ),
     );
   }

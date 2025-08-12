@@ -78,9 +78,30 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: IconButton(
-                  onPressed: () => context.go('/search'),
+                  onPressed: () => context.go('/explore'),
                   icon: const Icon(
                     Icons.search_outlined,
+                    size: 24,
+                    color: AppTheme.textColor,
+                  ),
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+              
+              const SizedBox(width: 16),
+              
+              // Notifications Button
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: IconButton(
+                  onPressed: () => context.go('/notifications'),
+                  icon: const Icon(
+                    Icons.notifications_outlined,
                     size: 24,
                     color: AppTheme.textColor,
                   ),
