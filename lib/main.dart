@@ -35,6 +35,8 @@ import './pages/escort_registration_page.dart';
 import './pages/group_details_page.dart';
 import './pages/post_details_page.dart';
 import './pages/service_form_page.dart';
+import './pages/login_page.dart';
+import './pages/register_page.dart';
 import './services/database_service.dart';
 
 void main() async {
@@ -190,6 +192,14 @@ class OmifyApp extends StatelessWidget {
         GoRoute(
           path: '/service-form',
           builder: (context, state) => const ServiceFormPage(),
+        ),
+        GoRoute(
+          path: '/login',
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: '/register',
+          builder: (context, state) => const RegisterPage(),
         ),
       ],
     );
